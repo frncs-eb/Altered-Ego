@@ -1,4 +1,4 @@
-# Object Oriented Pogramming 1 Game Project
+# Object Oriented Pogramming 2 Game Project
 
 ## Altered Ego: A text based game written in Java
 
