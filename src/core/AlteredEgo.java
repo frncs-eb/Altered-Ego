@@ -1,23 +1,20 @@
 package core;
 
-import graphics.GraphicManager;
-import screen.ScreenManager;
+import screens.Screen;
 
 public class AlteredEgo implements Runnable {
     private static final int FPS_LIMIT = 120;
     private static final double NANOSECONDS_PER_FRAME = 1_000_000_000.0 / FPS_LIMIT;
 
     private final GameWindow gameWindow;
-    private final GraphicManager graphicManager;
-    private final ScreenManager stateManager;
+    private final Screen screen;
 
     private Thread gameThread;
     private volatile boolean running = false;
 
     public AlteredEgo() {
         gameWindow = new GameWindow();
-        stateManager = new ScreenManager(gameWindow);
-        graphicManager = new GraphicManager();
+        screen = new Screen(gameWindow);
 
         startGame();
     }

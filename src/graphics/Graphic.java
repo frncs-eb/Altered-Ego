@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 
-public class GraphicManager extends JPanel {
+public class Graphic extends JPanel {
     private BufferedImage spriteSheet;
     private BufferedImage[] frames;
 
@@ -14,7 +14,7 @@ public class GraphicManager extends JPanel {
     private int aniTick = 0;
     private int aniIndex = 0;
 
-    public GraphicManager() {
+    public Graphic() {
         setOpaque(false);
     }
 
