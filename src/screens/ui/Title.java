@@ -1,29 +1,29 @@
-package screen.ui;
+package screens.ui;
 
-import screen.*;
+import screens.*;
 import utils.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Title extends BaseScreen {
-    public Title(ScreenManager screenManager) {
-        super(screenManager);
+public class Title extends ScreenBase {
+    public Title(Screen screen) {
+        super(screen);
     }
 
     @Override
     protected void initializeUI() {
-        JButton playButton = createButton("Play", 150, 452, 150, 50);
+        JButton playButton = createButton("Play", 130, 452, 150, 50);
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Selected Play");
-                screenManager.changeScreen(GameScreen.SELECT_MODE);
+                screen.changeScreen(GameScreen.SELECT_MODE);
             }
         });
 
-        JButton exitButton = createButton("Exit", 425, 452, 150, 50);
+        JButton exitButton = createButton("Exit", 420, 452, 150, 50);
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -31,15 +31,5 @@ public class Title extends BaseScreen {
                 System.exit(0);
             }
         });
-    }
-
-    @Override
-    protected void hideButtons() {
-
-    }
-
-    @Override
-    protected void showButtons() {
-
     }
 }
