@@ -1,7 +1,7 @@
 package core;
 
 import graphics.GraphicManager;
-import states.StateManager;
+import screen.ScreenManager;
 
 public class AlteredEgo implements Runnable {
     private static final int FPS_LIMIT = 120;
@@ -9,14 +9,14 @@ public class AlteredEgo implements Runnable {
 
     private final GameWindow gameWindow;
     private final GraphicManager graphicManager;
-    private final StateManager stateManager;
+    private final ScreenManager stateManager;
 
     private Thread gameThread;
     private volatile boolean running = false;
 
     public AlteredEgo() {
         gameWindow = new GameWindow();
-        stateManager = new StateManager(gameWindow);
+        stateManager = new ScreenManager(gameWindow);
         graphicManager = new GraphicManager();
 
         startGame();
