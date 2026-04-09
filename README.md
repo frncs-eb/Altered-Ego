@@ -12,12 +12,14 @@ Five random people bought an old game console in a store on the same day. The ga
 - Player vs Player
   - Consists of player versus another player.
   - Both players will choose their own character (random pick is optional).
+  - Best of 3.
   - Both players will take turns in attacking until one gets defeated.
   - Both players will be prompted if they want to do another round, else it will display the results.
 - Player vs Computer
   - It consists of a player versus a computer.
   - Player will choose a character (random pick is optional).
-  - Enemy computer skill is picked randomly.
+  - Best of 3.
+  - Player will take turn with CPU in attacking until one gets defeated
   - Player will be prompted if they want to do another round, else it will display the results.
 - Arcade Mode
   - The player will choose a character (random pick is optional).
@@ -26,14 +28,14 @@ Five random people bought an old game console in a store on the same day. The ga
   - Player is required to defeat all enemies.
 
 ### Development:
-- Language: Java
+- Language: Java (JDK 26)
 - IDE: IntelliJ
 - Sprites: Libresprite
 
 ### Contributors:
 - Addryane Bautista (Project Manager)
 - Dassel Bacaltos (Project Manager)
-- Daven Khylle Famat
-- Francis Earl Brigoli
-- Alieyandrew Juhanes Idala
+- Francis Earl Brigoli (Programmer)
+- Daven Khylle Famat (Graphic Artist)
+- Alieyandrew Juhanes Idala (Graphic Artist)
 - John Fiel Amancio (Former Member)
