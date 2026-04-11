@@ -39,7 +39,7 @@ public class Util {
     public static JLabel createLabel(String text, int x, int y, int width, int height) {
         JLabel label = new JLabel(text);
         label.setBounds(x, y, width, height);
-        label.setFont(new Font("Arial", Font.BOLD, 15));
+        label.setFont(new Font("Arial", Font.BOLD, 14));
         label.setForeground(Color.BLACK);
         return label;
     }
