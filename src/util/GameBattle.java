@@ -1,6 +1,6 @@
 package util;
 
-import entities.Entity;
+import entity.Entity;
 
 public class GameBattle {
     private final EntityPool entityPool = new EntityPool();

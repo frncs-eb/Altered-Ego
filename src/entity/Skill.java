@@ -1,6 +1,6 @@
 package entity;
 
-import util.*;
+import util.Util;
 
 public class Skill {
     private final String name;
