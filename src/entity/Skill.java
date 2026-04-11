@@ -1,6 +1,6 @@
-package entities;
+package entity;
 
-import utils.Util;
+import util.*;
 
 public class Skill {
     private final String name;
@@ -21,7 +21,7 @@ public class Skill {
 
     public int useSkill() {
         currentCooldown = baseCooldown;
-        return Util.randomInt(minDamage, maxDamage);
+        return Util.rng(minDamage, maxDamage);
     }
 
     public void reduceCooldown() {
@@ -38,12 +38,27 @@ public class Skill {
         return currentCooldown > 0;
     }
 
-    //Getters
     public String getName() {
         return name;
     }
 
+    public int getMinDamage() {
+        return minDamage;
+    }
+
+    public int getMaxDamage() {
+        return maxDamage;
+    }
+
     public int getManaCost() {
         return manaCost;
+    }
+
+    public int getBaseCooldown() {
+        return baseCooldown;
+    }
+
+    public int getCurrentCooldown() {
+        return currentCooldown;
     }
 }

@@ -1,12 +1,12 @@
-package entities;
+package entity;
 
-import utils.Util;
+import util.Util;
 
 public class Entity {
     protected final String name;
     protected final int baseHP = 500;
-    protected final int baseMana = 200;
     protected int currentHP;
+    protected final int baseMana = 200;
     protected int currentMana;
 
     protected Skill skill1;
@@ -23,8 +23,26 @@ public class Entity {
     }
 
     public void basicAttack(Entity target) {
-        int damage = Util.randomInt(40, 50);
+        int damage = Util.rng(40, 50);
         target.takeDamage(damage);
+    }
+
+    public void takeDamage(int damage) {
+        if(isAlive()) {
+            currentHP = Math.clamp(currentHP - damage, 0, baseHP);
+        }
+    }
+
+    public void regenHP() {
+        if(isAlive()) {
+            currentMana = Math.clamp(currentHP + 50, 0, baseMana);
+        }
+    }
+
+    public void regenMana() {
+        if(isAlive()) {
+            currentMana = Math.clamp(currentMana + 20, 0, baseMana);
+        }
     }
 
     public void useSkill(int skillIndex, Entity target) {
@@ -42,13 +60,10 @@ public class Entity {
         }
     }
 
-    public void takeDamage(int damage) {
-        if(isAlive()) {
-            currentHP -= damage;
-            if(currentHP < 0) {
-                currentHP = 0;
-            }
-        }
+    public void reduceCooldowns() {
+        skill1.reduceCooldown();
+        skill2.reduceCooldown();
+        skill3.reduceCooldown();
     }
 
     public void resetCharacter() {
@@ -63,16 +78,32 @@ public class Entity {
         return currentHP > 0;
     }
 
-    //Getters
     public String getName() {
         return name;
+    }
+
+    public int getBaseHP() {
+        return baseHP;
     }
 
     public int getCurrentHP() {
         return currentHP;
     }
 
+    public int getBaseMana() {
+        return baseMana;
+    }
+
     public int getCurrentMana() {
         return currentMana;
+    }
+
+    public Skill getSkill(int index) {
+        return switch(index) {
+            case 1 -> skill1;
+            case 2 -> skill2;
+            case 3 -> skill3;
+            default -> null;
+        };
     }
 }
