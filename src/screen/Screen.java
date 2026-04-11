@@ -1,18 +1,20 @@
-package screens;
+package screen;
 
 import core.*;
-import screens.ui.*;
-import utils.*;
+import screen.ui.*;
+import util.*;
 
 public class Screen {
     private final GameWindow gameWindow;
     private ScreenBase currentScreen;
 
-    private final ScreenBase title;
-    private final ScreenBase modeSelect;
-    private final ScreenBase characterSelect;
-    private final ScreenBase battle;
-    private final ScreenBase result;
+    private final Title title;
+    private final ModeSelect modeSelect;
+    private final CharacterSelect characterSelect;
+    private final Battle battle;
+    private final Result result;
+
+    private final GameBattle gameBattle;
 
     public Screen(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -22,6 +24,8 @@ public class Screen {
         characterSelect = new CharacterSelect(this);
         battle = new Battle(this);
         result = new Result(this);
+
+        gameBattle = new GameBattle();
 
         currentScreen = title;
         gameWindow.changeWindow(currentScreen);
@@ -35,6 +39,27 @@ public class Screen {
             case BATTLE -> battle;
             case RESULT -> result;
         };
+
+        if(gameScreen == GameScreen.TITLE) {
+            gameBattle.reset();
+        }
+
+        if(gameScreen == GameScreen.SELECT_CHARACTER) {
+            characterSelect.resetSelection();
+        }
+
+        if(gameScreen == GameScreen.BATTLE) {
+            battle.startBattle();
+        }
+
+        if(gameScreen == GameScreen.RESULT) {
+            result.showResult();
+        }
+
         gameWindow.changeWindow(currentScreen);
+    }
+
+    public GameBattle getBattle() {
+        return gameBattle;
     }
 }

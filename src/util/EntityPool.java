@@ -1,7 +1,7 @@
 package util;
 
 import java.util.*;
-import entity.Entity;
+import entity.*;
 
 public class EntityPool {
     private final Map<GameCharacter, Entity> pool = new EnumMap<>(GameCharacter.class);

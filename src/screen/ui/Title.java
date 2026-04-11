@@ -1,8 +1,6 @@
 package screen.ui;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import screen.*;
 import util.*;
 
@@ -13,10 +11,10 @@ public class Title extends ScreenBase {
 
     @Override
     protected void initializeUI() {
-        JButton playButton = createButton("Play", 130, 452, 150, 50);
+        JButton playButton = createButton("Play", 105, 452, 200, 50);
         playButton.addActionListener(e -> screen.changeScreen(GameScreen.SELECT_MODE));
 
-        JButton exitButton = createButton("Exit", 420, 452, 150, 50);
+        JButton exitButton = createButton("Exit", 410, 452, 200, 50);
         exitButton.addActionListener(e -> System.exit(0));
     }
 }

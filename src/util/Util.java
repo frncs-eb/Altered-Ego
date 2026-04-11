@@ -59,7 +59,7 @@ public class Util {
         button.setBounds(x, y, width, height);
         button.setFont(new Font("Arial", Font.BOLD, 15));
         button.setForeground(Color.BLACK);
-        button.setBorderPainted(false);
+        //button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);
         button.setOpaque(false);

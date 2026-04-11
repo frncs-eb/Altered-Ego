@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.awt.*;
 import javax.swing.*;
-import util.Util;
+import util.*;
 
 public abstract class ScreenBase extends JPanel {
     protected Screen screen;
