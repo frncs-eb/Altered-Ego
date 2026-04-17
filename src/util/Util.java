@@ -6,7 +6,6 @@ import java.util.Random;
 
 /**
  * General-purpose utility methods used across the game.
- * All methods are static, this class is not meant to be instantiated.
  */
 public class Util {
     private static final Random random = new Random();

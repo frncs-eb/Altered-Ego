@@ -1,10 +1,10 @@
 package screen;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.awt.*;
+import util.Util;
 import javax.swing.*;
-import util.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ScreenBase extends JPanel {
     protected Screen screen;
@@ -42,25 +42,25 @@ public abstract class ScreenBase extends JPanel {
     }
 
     protected void showLabels() {
-        for(JLabel label : labels) {
+        for (JLabel label : labels) {
             label.setVisible(true);
         }
     }
 
     protected void hideLabels() {
-        for(JLabel label : labels) {
+        for (JLabel label : labels) {
             label.setVisible(false);
         }
     }
 
     protected void showButtons() {
-        for(JButton button : buttons) {
+        for (JButton button : buttons) {
             button.setVisible(true);
         }
     }
 
     protected void hideButtons() {
-        for(JButton button : buttons) {
+        for (JButton button : buttons) {
             button.setVisible(false);
         }
     }

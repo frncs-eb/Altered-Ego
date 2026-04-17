@@ -1,42 +1,40 @@
 package screen.ui;
 
-import java.awt.*;
+import entity.Entity;
+import entity.Skill;
+import screen.Screen;
+import screen.ScreenBase;
+import util.GameBattle;
+import util.GameMode;
+import util.GameScreen;
 import javax.swing.*;
-import entity.*;
-import screen.*;
-import util.*;
+import java.awt.*;
 
 public class Battle extends ScreenBase {
+    private static final int TURN_TIME = 10;
     private Entity player1;
     private Entity player2;
-
     private boolean isPlayer1Turn;
     private boolean battleOver;
-
     private JLabel p1NameLabel;
     private JLabel p1HpLabel;
     private JLabel p1ManaLabel;
     private JProgressBar p1HpBar;
     private JProgressBar p1ManaBar;
-
     private JLabel p2NameLabel;
     private JLabel p2HpLabel;
     private JLabel p2ManaLabel;
     private JProgressBar p2HpBar;
     private JProgressBar p2ManaBar;
-
     private JLabel roundLabel;
     private JLabel scoreLabel;
     private JLabel countdownLabel;
     private JLabel turnLabel;
     private JLabel combatLog;
-
     private JButton basicAttackButton;
     private JButton skill1Button;
     private JButton skill2Button;
     private JButton skill3Button;
-
-    private static final int TURN_TIME = 10;
     private Timer turnTimer;
     private int turnTimeLeft;
 
@@ -90,7 +88,7 @@ public class Battle extends ScreenBase {
         combatLog.setForeground(Color.DARK_GRAY);
 
         basicAttackButton = createButton("Basic Attack", 255, 550, 200, 50);
-        skill1Button = createButton("", 65,  620, 140, 50);
+        skill1Button = createButton("", 65, 620, 140, 50);
         skill2Button = createButton("", 285, 620, 140, 50);
         skill3Button = createButton("", 500, 620, 140, 50);
 
@@ -104,8 +102,8 @@ public class Battle extends ScreenBase {
         GameBattle battle = screen.getBattle();
         battle.resetRound();
 
-        player1 = battle.getEntity1();
-        player2 = battle.getEntity2();
+        player1 = battle.getEntityOne();
+        player2 = battle.getEntityTwo();
 
         isPlayer1Turn = true;
         battleOver = false;
@@ -118,13 +116,13 @@ public class Battle extends ScreenBase {
         combatLog.setText("Round " + battle.getRoundNumber() + " — Fight!");
 
         boolean isCpu = battle.getGameMode() != GameMode.VS_PLAYER;
-        if(isCpu) {
+        if (isCpu) {
             startTurnTimer();
         }
     }
 
     private void handleAction(int actionIndex) {
-        if(battleOver) {
+        if (battleOver) {
             return;
         }
 
@@ -134,18 +132,18 @@ public class Battle extends ScreenBase {
         int damage = 0;
         String logMessage;
 
-        if(actionIndex == 0) {
+        if (actionIndex == 0) {
             int hpBefore = defender.getCurrentHP();
             attacker.basicAttack(defender);
             damage = hpBefore - defender.getCurrentHP();
             logMessage = attacker.getName() + " used Basic Attack for " + damage + " damage!";
         } else {
             Skill skill = attacker.getSkill(actionIndex);
-            if(skill.isCooldown()) {
+            if (skill.isCooldown()) {
                 combatLog.setText(skill.getName() + " is on cooldown! (" + skill.getCurrentCooldown() + " turns left)");
                 return;
             }
-            if(attacker.getCurrentMana() < skill.getManaCost()) {
+            if (attacker.getCurrentMana() < skill.getManaCost()) {
                 combatLog.setText("Not enough mana to use " + skill.getName() + "!");
                 return;
             }
@@ -160,7 +158,7 @@ public class Battle extends ScreenBase {
         combatLog.setText(logMessage);
         refreshBars();
 
-        if(!defender.isAlive()) {
+        if (!defender.isAlive()) {
             endBattle(attacker);
             return;
         }
@@ -169,11 +167,11 @@ public class Battle extends ScreenBase {
         refreshTurnLabel();
 
         boolean isCpu = screen.getBattle().getGameMode() != GameMode.VS_PLAYER;
-        if(isCpu && !isPlayer1Turn) {
+        if (isCpu && !isPlayer1Turn) {
             scheduleCpuTurn();
         } else {
             refreshSkillButtons(isPlayer1Turn ? player1 : player2);
-            if(isCpu) {
+            if (isCpu) {
                 startTurnTimer();
             }
         }
@@ -188,7 +186,7 @@ public class Battle extends ScreenBase {
         turnTimer = new Timer(1000, e -> {
             turnTimeLeft--;
             countdownLabel.setText(turnTimeLeft + "s");
-            if(turnTimeLeft <= 0) {
+            if (turnTimeLeft <= 0) {
                 stopTurnTimer();
                 combatLog.setText("Time's up! Auto basic attack.");
                 handleAction(0);
@@ -198,7 +196,7 @@ public class Battle extends ScreenBase {
     }
 
     private void stopTurnTimer() {
-        if(turnTimer != null && turnTimer.isRunning()) {
+        if (turnTimer != null && turnTimer.isRunning()) {
             turnTimer.stop();
         }
         countdownLabel.setVisible(false);
@@ -214,14 +212,14 @@ public class Battle extends ScreenBase {
     }
 
     private void cpuTakeTurn() {
-        if(battleOver) {
+        if (battleOver) {
             return;
         }
 
         int[] priority = {3, 2, 1};
-        for(int i : priority) {
+        for (int i : priority) {
             Skill skill = player2.getSkill(i);
-            if(!skill.isCooldown() && player2.getCurrentMana() >= skill.getManaCost()) {
+            if (!skill.isCooldown() && player2.getCurrentMana() >= skill.getManaCost()) {
                 handleAction(i);
                 return;
             }
@@ -239,7 +237,7 @@ public class Battle extends ScreenBase {
 
         refreshRoundLabels();
 
-        if(seriesOver) {
+        if (seriesOver) {
             combatLog.setText(winner.getName() + " wins the series!");
             Timer timer = new Timer(2000, e -> {
                 screen.changeScreen(GameScreen.RESULT);
@@ -282,7 +280,7 @@ public class Battle extends ScreenBase {
     private void refreshRoundLabels() {
         GameBattle state = screen.getBattle();
         roundLabel.setText("Round " + state.getRoundNumber());
-        scoreLabel.setText(state.getP1Wins() + " - " + state.getP2Wins());
+        scoreLabel.setText(state.getPlayerOneWins() + " - " + state.getPlayerTwoWins());
     }
 
     private void refreshTurnLabel() {
@@ -293,11 +291,11 @@ public class Battle extends ScreenBase {
 
     private void refreshSkillButtons(Entity active) {
         setActionButtonsEnabled(true);
-        for(int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 3; i++) {
             Skill skill = active.getSkill(i);
             JButton btn = i == 1 ? skill1Button : i == 2 ? skill2Button : skill3Button;
             boolean usable = !skill.isCooldown() && active.getCurrentMana() >= skill.getManaCost();
-            if(skill.isCooldown()) {
+            if (skill.isCooldown()) {
                 btn.setText(skill.getName() + " (CD:" + skill.getCurrentCooldown() + ")");
             } else {
                 btn.setText(skill.getName() + " (" + skill.getManaCost() + "MP)");

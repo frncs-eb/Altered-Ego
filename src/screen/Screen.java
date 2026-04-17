@@ -1,20 +1,19 @@
 package screen;
 
-import core.*;
+import core.GameWindow;
 import screen.ui.*;
-import util.*;
+import util.GameBattle;
+import util.GameScreen;
 
 public class Screen {
     private final GameWindow gameWindow;
-    private ScreenBase currentScreen;
-
     private final Title title;
     private final ModeSelect modeSelect;
     private final CharacterSelect characterSelect;
     private final Battle battle;
     private final Result result;
-
     private final GameBattle gameBattle;
+    private ScreenBase currentScreen;
 
     public Screen(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -32,7 +31,7 @@ public class Screen {
     }
 
     public void changeScreen(GameScreen gameScreen) {
-        currentScreen = switch(gameScreen) {
+        currentScreen = switch (gameScreen) {
             case TITLE -> title;
             case SELECT_MODE -> modeSelect;
             case SELECT_CHARACTER -> characterSelect;
@@ -40,19 +39,19 @@ public class Screen {
             case RESULT -> result;
         };
 
-        if(gameScreen == GameScreen.TITLE) {
-            gameBattle.reset();
+        if (gameScreen == GameScreen.TITLE) {
+            gameBattle.resetSeries();
         }
 
-        if(gameScreen == GameScreen.SELECT_CHARACTER) {
+        if (gameScreen == GameScreen.SELECT_CHARACTER) {
             characterSelect.resetSelection();
         }
 
-        if(gameScreen == GameScreen.BATTLE) {
+        if (gameScreen == GameScreen.BATTLE) {
             battle.startBattle();
         }
 
-        if(gameScreen == GameScreen.RESULT) {
+        if (gameScreen == GameScreen.RESULT) {
             result.showResult();
         }
 

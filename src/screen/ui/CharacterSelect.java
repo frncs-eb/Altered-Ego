@@ -1,12 +1,13 @@
 package screen.ui;
 
-import javax.swing.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import screen.*;
+import screen.Screen;
+import screen.ScreenBase;
 import util.*;
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CharacterSelect extends ScreenBase {
     private Map<GameCharacter, JButton> characterButtons;
@@ -25,7 +26,7 @@ public class CharacterSelect extends ScreenBase {
         int gap = 100;
 
         GameCharacter[] all = GameCharacter.values();
-        for(int i = 0; i < all.length; i++) {
+        for (int i = 0; i < all.length; i++) {
             GameCharacter gc = all[i];
             int x = (i % 2 == 0) ? col1 : col2;
             int y = yStart + ((i / 2) * gap);
@@ -42,31 +43,31 @@ public class CharacterSelect extends ScreenBase {
         GameBattle battle = screen.getBattle();
         boolean isPvP = battle.getGameMode() == GameMode.VS_PLAYER;
 
-        if(selectionRound == 1) {
-            battle.setPlayer1(character);
+        if (selectionRound == 1) {
+            battle.setPlayerOne(character);
             characterButtons.get(character).setEnabled(false);
-            if(isPvP) {
+            if (isPvP) {
                 selectionRound = 2;
             } else {
                 List<GameCharacter> available = new ArrayList<>();
-                for(Map.Entry<GameCharacter, JButton> entry : characterButtons.entrySet()) {
-                    if(entry.getValue().isEnabled()) {
+                for (Map.Entry<GameCharacter, JButton> entry : characterButtons.entrySet()) {
+                    if (entry.getValue().isEnabled()) {
                         available.add(entry.getKey());
                     }
                 }
                 GameCharacter cpuPick = available.get(Util.rng(0, available.size() - 1));
-                battle.setPlayer2(cpuPick);
+                battle.setPlayerTwo(cpuPick);
                 screen.changeScreen(GameScreen.BATTLE);
             }
         } else {
-            battle.setPlayer2(character);
+            battle.setPlayerTwo(character);
             screen.changeScreen(GameScreen.BATTLE);
         }
     }
 
     public void resetSelection() {
         selectionRound = 1;
-        for(JButton btn : characterButtons.values()) {
+        for (JButton btn : characterButtons.values()) {
             btn.setEnabled(true);
         }
     }

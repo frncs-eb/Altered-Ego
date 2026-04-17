@@ -5,8 +5,8 @@ import util.Util;
 public class Entity {
     protected final String name;
     protected final int baseHP = 500;
-    protected int currentHP;
     protected final int baseMana = 200;
+    protected int currentHP;
     protected int currentMana;
 
     protected Skill skill1;
@@ -28,32 +28,32 @@ public class Entity {
     }
 
     public void takeDamage(int damage) {
-        if(isAlive()) {
+        if (isAlive()) {
             currentHP = Math.clamp(currentHP - damage, 0, baseHP);
         }
     }
 
     public void regenHP() {
-        if(isAlive()) {
+        if (isAlive()) {
             currentMana = Math.clamp(currentHP + 50, 0, baseMana);
         }
     }
 
     public void regenMana() {
-        if(isAlive()) {
+        if (isAlive()) {
             currentMana = Math.clamp(currentMana + 20, 0, baseMana);
         }
     }
 
     public void useSkill(int skillIndex, Entity target) {
-        Skill selectedSkill = switch(skillIndex) {
+        Skill selectedSkill = switch (skillIndex) {
             case 1 -> skill1;
             case 2 -> skill2;
             case 3 -> skill3;
             default -> null;
         };
 
-        if(selectedSkill != null) {
+        if (selectedSkill != null) {
             int damage = selectedSkill.useSkill();
             target.takeDamage(damage);
             currentMana -= selectedSkill.getManaCost();
@@ -99,7 +99,7 @@ public class Entity {
     }
 
     public Skill getSkill(int index) {
-        return switch(index) {
+        return switch (index) {
             case 1 -> skill1;
             case 2 -> skill2;
             case 3 -> skill3;

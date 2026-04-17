@@ -25,7 +25,7 @@ public class Skill {
     }
 
     public void reduceCooldown() {
-        if(isCooldown()) {
+        if (isCooldown()) {
             currentCooldown--;
         }
     }

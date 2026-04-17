@@ -1,6 +1,6 @@
 package core;
 
-import screens.Screen;
+import screen.Screen;
 
 public class AlteredEgo implements Runnable {
     private static final int FPS_LIMIT = 120;
@@ -20,7 +20,7 @@ public class AlteredEgo implements Runnable {
     }
 
     public synchronized void startGame() {
-        if(running) return;
+        if (running) return;
 
         running = true;
         gameThread = new Thread(this);
@@ -37,18 +37,16 @@ public class AlteredEgo implements Runnable {
         long lastFrame = System.nanoTime();
         long lastCheck = System.currentTimeMillis();
 
-        while(running) {
+        while (running) {
             long now = System.nanoTime();
-            if(now - lastFrame >= NANOSECONDS_PER_FRAME) {
+            if (now - lastFrame >= NANOSECONDS_PER_FRAME) {
                 gameWindow.repaint();
                 lastFrame = now;
                 frame++;
             }
 
-            //FPS Counter
-            if(System.currentTimeMillis() - lastCheck >= 1000) {
+            if (System.currentTimeMillis() - lastCheck >= 1000) {
                 lastCheck = System.currentTimeMillis();
-                System.out.println("FPS: " + frame);
                 frame = 0;
             }
         }
