@@ -4,18 +4,28 @@ package util;
  * Represent the screens of the game.
  */
 public enum GameScreen {
-    /** The main screen. */
+    /**
+     * The main screen.
+     */
     TITLE,
 
-    /** The mode selection screen. */
+    /**
+     * The mode selection screen.
+     */
     SELECT_MODE,
 
-    /** The character selection screen. */
+    /**
+     * The character selection screen.
+     */
     SELECT_CHARACTER,
 
-    /** The battle screen. */
+    /**
+     * The battle screen.
+     */
     BATTLE,
 
-    /** The result screen. */
+    /**
+     * The result screen.
+     */
     RESULT
 }

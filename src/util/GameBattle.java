@@ -1,91 +1,124 @@
 package util;
 
-import entity.*;
+import entity.Entity;
 
+/**
+ * Tracks the ongoing battle.
+ */
 public class GameBattle {
+    private static final int WINS_REQUIRED = 2;
     private final EntityPool entityPool = new EntityPool();
-
     private GameMode gameMode;
-
-    private GameCharacter player1;
-    private GameCharacter player2;
-
+    private GameCharacter playerOne;
+    private GameCharacter playerTwo;
+    private int playerOneWins = 0;
+    private int playerTwoWins = 0;
     private String roundWinner;
     private String seriesWinner;
-
-    private int p1Wins = 0;
-    private int p2Wins = 0;
-
     private int roundNumber = 1;
 
-    private static final int WINS_REQUIRED = 2;
+    /**
+     * Records a round win for the specified player, increments the round counter,
+     * and checks whether the series has ended.
+     *
+     * @param playerWon {@code true} if player 1 won the round, {@code false} if player 2 won the round
+     * @return {@code true} if a player has now reached {@link #WINS_REQUIRED}
+     */
+    public boolean recordWin(boolean playerWon) {
+        if (playerWon) {
+            playerOneWins++;
+        } else {
+            playerTwoWins++;
+        }
 
-    public void reset() {
-        gameMode = null;
+        roundWinner = playerWon ? playerOne.getName() : playerTwo.getName();
+        roundNumber++;
 
-        player1 = null;
-        player2 = null;
+        if (playerOneWins >= WINS_REQUIRED || playerTwoWins >= WINS_REQUIRED) {
+            seriesWinner = roundWinner;
+            return true;
+        }
 
-        roundWinner = null;
-        seriesWinner = null;
-
-        p1Wins = 0;
-        p2Wins = 0;
-
-        roundNumber = 1;
+        return false;
     }
 
+    /**
+     * Resets the round state including the character and winner
+     * information.
+     */
     public void resetRound() {
         roundWinner = null;
         seriesWinner = null;
 
-        if(player1 != null) {
-            entityPool.get(player1).resetCharacter();
+        if (playerOne != null) {
+            entityPool.get(playerOne).resetCharacter();
         }
-        if(player2 != null) {
-            entityPool.get(player2).resetCharacter();
+
+        if (playerTwo != null) {
+            entityPool.get(playerTwo).resetCharacter();
         }
     }
 
-    public boolean recordWin(boolean player1Won) {
-        if(player1Won) {
-            p1Wins++;
-        } else {
-            p2Wins++;
-        }
+    /**
+     * Resets the battle state including the mode, characters,
+     * win counts, winner information, and round number.
+     */
+    public void resetSeries() {
+        gameMode = null;
 
-        roundWinner = player1Won ? player1.getName() : player2.getName();
-        roundNumber++;
+        playerOne = null;
+        playerTwo = null;
+        playerOneWins = 0;
+        playerTwoWins = 0;
 
-        if(p1Wins >= WINS_REQUIRED || p2Wins >= WINS_REQUIRED) {
-            seriesWinner = roundWinner;
-            return true;
-        }
-        return false;
+        roundWinner = null;
+        seriesWinner = null;
+
+        roundNumber = 1;
     }
 
     public Entity getEntity(GameCharacter type) {
         return entityPool.get(type);
     }
 
-    public Entity getEntity1() {
-        return entityPool.get(player1);
+    public Entity getEntityOne() {
+        return entityPool.get(playerOne);
     }
 
-    public Entity getEntity2() {
-        return entityPool.get(player2);
+    public Entity getEntityTwo() {
+        return entityPool.get(playerTwo);
     }
 
     public GameMode getGameMode() {
         return gameMode;
     }
 
-    public GameCharacter getPlayer1() {
-        return player1;
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
     }
 
-    public GameCharacter getPlayer2() {
-        return player2;
+    public GameCharacter getPlayerOne() {
+        return playerOne;
+    }
+
+    public void setPlayerOne(GameCharacter playerOne) {
+        this.playerOne = playerOne;
+    }
+
+    public GameCharacter getPlayerTwo() {
+        return playerTwo;
+    }
+
+    public void setPlayerTwo(GameCharacter playerTwo) {
+        this.playerTwo = playerTwo;
+    }
+
+    public int getPlayerOneWins() {
+        return playerOneWins;
+    }
+
+    public int getPlayerTwoWins() {
+        return playerTwoWins;
     }
 
     public String getRoundWinner() {
@@ -96,27 +129,7 @@ public class GameBattle {
         return seriesWinner;
     }
 
-    public int getP1Wins() {
-        return p1Wins;
-    }
-
-    public int getP2Wins() {
-        return p2Wins;
-    }
-
     public int getRoundNumber() {
         return roundNumber;
-    }
-
-    public void setGameMode(GameMode gameMode) {
-        this.gameMode = gameMode;
-    }
-
-    public void setPlayer1(GameCharacter player1) {
-        this.player1 = player1;
-    }
-
-    public void setPlayer2(GameCharacter player2) {
-        this.player2 = player2;
     }
 }
