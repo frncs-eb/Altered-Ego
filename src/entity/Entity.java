@@ -17,9 +17,9 @@ public class Entity {
         this.name = name;
         this.currentHP = baseHP;
         this.currentMana = baseMana;
-        skill1 = new Skill(skill1Name, 50, 60, 25, 2);
-        skill2 = new Skill(skill2Name, 60, 70, 50, 3);
-        skill3 = new Skill(skill3Name, 100, 150, 100, 5);
+        skill1 = new Skill(skill1Name, 50, 60, 25, 1);
+        skill2 = new Skill(skill2Name, 60, 70, 50, 2);
+        skill3 = new Skill(skill3Name, 100, 150, 100, 3);
     }
 
     public void basicAttack(Entity target) {
@@ -105,5 +105,15 @@ public class Entity {
             case 3 -> skill3;
             default -> null;
         };
+    }
+
+    //for arcade
+    public void healHP(int amount) {
+        currentHP = Math.min(currentHP + amount, baseHP);
+    }
+
+    //for arcade
+    public void healMana(int amount) {
+        currentMana = Math.min(currentMana + amount, baseMana);
     }
 }

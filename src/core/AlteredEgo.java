@@ -1,6 +1,6 @@
 package core;
 
-import screens.Screen;
+import screen.Screen;
 
 public class AlteredEgo implements Runnable {
     private static final int FPS_LIMIT = 120;
