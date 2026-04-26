@@ -25,7 +25,7 @@ public class CharacterSelect extends ScreenBase {
         int gap = 100;
 
         GameCharacter[] all = GameCharacter.values();
-        for(int i = 0; i < all.length; i++) {
+        for (int i = 0; i < all.length; i++) {
             GameCharacter gc = all[i];
             int x = (i % 2 == 0) ? col1 : col2;
             int y = yStart + ((i / 2) * gap);
@@ -44,17 +44,13 @@ public class CharacterSelect extends ScreenBase {
         boolean isPvP = mode == GameMode.VS_PLAYER;
         boolean isArcade = mode == GameMode.ARCADE;
 
-<<<<<<< HEAD
         if (selectionRound == 1) {
-=======
-        if(selectionRound == 1) {
->>>>>>> 851f8a73d659c2c4f9b2cfb98a19b044302a16bb
             battle.setPlayerOne(character);
             characterButtons.get(character).setEnabled(false);
 
             if (isPvP) {
                 selectionRound = 2;
-            } else if (isArcade) { //for arcade
+            } else if (isArcade) {
                 List<GameCharacter> enemies = new ArrayList<>();
                 for (GameCharacter gc : GameCharacter.values()) {
                     if (gc != character) enemies.add(gc);
@@ -72,10 +68,7 @@ public class CharacterSelect extends ScreenBase {
                 screen.changeScreen(GameScreen.BATTLE);
             }
         } else {
-<<<<<<< HEAD
             // PvP round 2 selection
-=======
->>>>>>> 851f8a73d659c2c4f9b2cfb98a19b044302a16bb
             battle.setPlayerTwo(character);
             screen.changeScreen(GameScreen.BATTLE);
         }
@@ -83,18 +76,14 @@ public class CharacterSelect extends ScreenBase {
 
     public void resetSelection() {
         selectionRound = 1;
-        for(JButton btn : characterButtons.values()) {
+        for (JButton btn : characterButtons.values()) {
             btn.setEnabled(true);
         }
     }
 
     @Override
-    protected void hideButtons() {
-
-    }
+    protected void hideButtons() { }
 
     @Override
-    protected void showButtons() {
-
-    }
+    protected void showButtons() { }
 }

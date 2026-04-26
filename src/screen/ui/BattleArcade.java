@@ -111,11 +111,6 @@ public class BattleArcade extends ScreenBase {
     public void startBattle() {
         GameBattle battle = screen.getBattle();
 
-<<<<<<< HEAD
-        battle.resetRound();           // reset enemy HP, not player
-
-=======
->>>>>>> 851f8a73d659c2c4f9b2cfb98a19b044302a16bb
         player1 = battle.getEntityOne();
         player2 = battle.getEntityTwo();
 

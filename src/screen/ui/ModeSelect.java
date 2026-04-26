@@ -29,7 +29,8 @@ public class ModeSelect extends ScreenBase {
 
         JButton arcadeButton = createButton("Arcade", 255, 380, 200, 50);
         arcadeButton.addActionListener(e -> {
-            screen.getBattle().reset();
+            screen.getBattle().resetSeries();
+            screen.getCharacterSelect().resetSelection();
             screen.getBattle().setGameMode(GameMode.ARCADE);
             screen.changeScreen(GameScreen.SELECT_CHARACTER);
         });

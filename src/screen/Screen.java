@@ -72,4 +72,8 @@ public class Screen {
     public GameBattle getBattle() {
         return gameBattle;
     }
+
+    public CharacterSelect getCharacterSelect() {
+        return characterSelect;
+    }
 }
