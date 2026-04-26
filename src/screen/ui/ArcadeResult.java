@@ -74,7 +74,7 @@ public class ArcadeResult extends ScreenBase {
         // ── Main menu button ──────────────────────────────────────────────────
         mainMenuButton = createButton("Main Menu", 255, 540, 200, 45);
         mainMenuButton.addActionListener(e -> {
-            screen.getBattle().reset();
+            screen.getBattle().resetSeries();
             screen.changeScreen(GameScreen.TITLE);
         });
     }

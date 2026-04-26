@@ -24,6 +24,7 @@ public class GameBattle {
 
     private static final int WINS_REQUIRED = 2;
 
+<<<<<<< HEAD
     private final List<GameCharacter> arcadeEnemies = new ArrayList<>();
 
     //for arcade
@@ -33,6 +34,9 @@ public class GameBattle {
     private boolean arcadeVictory = false;
 
     public void reset() {
+=======
+    public void resetSeries() {
+>>>>>>> 851f8a73d659c2c4f9b2cfb98a19b044302a16bb
         gameMode = null;
         player1 = null;   // ← this is what unblocks Earl
         player2 = null;
@@ -130,7 +134,11 @@ public class GameBattle {
     }
 
     public Entity getEntityTwo() {
+<<<<<<< HEAD
         return player2 != null ? entityPool.get(player2) : null;
+=======
+        return entityPool.get(player2);
+>>>>>>> 851f8a73d659c2c4f9b2cfb98a19b044302a16bb
     }
 
     public GameMode      getGameMode()     { return gameMode; }
@@ -142,6 +150,7 @@ public class GameBattle {
     public int           getPlayerTwoWins()       { return p2Wins; }
     public int           getRoundNumber()  { return roundNumber; }
 
+<<<<<<< HEAD
     public int     getTotalEnemiesDefeated() { return totalEnemiesDefeated; }
     public int     getTotalEnemies()         { return arcadeEnemyQueue.size(); }
     public boolean isArcadeVictory()         { return arcadeVictory; }
@@ -150,3 +159,45 @@ public class GameBattle {
     public void setPlayerOne(GameCharacter player1)    { this.player1 = player1; }
     public void setPlayerTwo(GameCharacter player2)    { this.player2 = player2; }
 }
+=======
+    public GameCharacter getPlayerOne() {
+        return player1;
+    }
+
+    public GameCharacter getPlayerTwo() {
+        return player2;
+    }
+
+    public String getRoundWinner() {
+        return roundWinner;
+    }
+
+    public String getSeriesWinner() {
+        return seriesWinner;
+    }
+
+    public int getPlayerOneWins() {
+        return p1Wins;
+    }
+
+    public int getPlayerTwoWins() {
+        return p2Wins;
+    }
+
+    public int getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
+
+    public void setPlayerOne(GameCharacter player1) {
+        this.player1 = player1;
+    }
+
+    public void setPlayerTwo(GameCharacter player2) {
+        this.player2 = player2;
+    }
+}
+>>>>>>> 851f8a73d659c2c4f9b2cfb98a19b044302a16bb
