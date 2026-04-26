@@ -1,6 +1,9 @@
 package util;
 
 import entity.*;
+import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameBattle {
     private final EntityPool entityPool = new EntityPool();
@@ -15,40 +18,94 @@ public class GameBattle {
 
     private int p1Wins = 0;
     private int p2Wins = 0;
+    private int enemiesDefeated = 0;
 
     private int roundNumber = 1;
 
     private static final int WINS_REQUIRED = 2;
 
+    private final List<GameCharacter> arcadeEnemies = new ArrayList<>();
+
+    //for arcade
+    private List<GameCharacter> arcadeEnemyQueue = new ArrayList<>();
+    private int arcadeEnemyIndex = 0;
+    private int totalEnemiesDefeated = 0;
+    private boolean arcadeVictory = false;
+
     public void reset() {
         gameMode = null;
-
-        player1 = null;
+        player1 = null;   // ← this is what unblocks Earl
         player2 = null;
-
         roundWinner = null;
         seriesWinner = null;
-
         p1Wins = 0;
         p2Wins = 0;
-
+        enemiesDefeated = 0;
+        arcadeEnemies.clear();
         roundNumber = 1;
     }
 
     public void resetRound() {
         roundWinner = null;
-        seriesWinner = null;
+        p1Wins = 0;
+        p2Wins = 0;
+        roundNumber = 1;
 
-        if(player1 != null) {
-            entityPool.get(player1).resetCharacter();
-        }
-        if(player2 != null) {
+        // Only reset the enemy, not the player
+        if (player2 != null) {
             entityPool.get(player2).resetCharacter();
         }
     }
 
+    //for arcade
+    public void setupArcade(List<GameCharacter> enemies) {
+        arcadeEnemyQueue = new ArrayList<>(enemies);
+        arcadeEnemyIndex = 0;
+        totalEnemiesDefeated = 0;
+        arcadeVictory = false;
+
+        if (!arcadeEnemyQueue.isEmpty()) {
+            player2 = arcadeEnemyQueue.get(0);
+        }
+
+        if (player1 != null) entityPool.get(player1).resetCharacter();
+        if (player2 != null) entityPool.get(player2).resetCharacter();
+    }
+
+    //for arcade
+    public boolean advanceArcadeEnemy() {
+        totalEnemiesDefeated++;
+        arcadeEnemyIndex++;
+        Random random = new Random();
+
+        if (arcadeEnemyIndex >= arcadeEnemyQueue.size()) {
+            arcadeVictory = true;
+            player2 = null;
+            return true;
+        }
+
+        player2 = arcadeEnemyQueue.get(arcadeEnemyIndex);
+        entityPool.get(player2).resetCharacter();
+
+        Entity p1Entity = entityPool.get(player1);
+
+        int healAmount = 50;
+        int manaAmount = 20;
+
+        // base heal multiplied by random multiplier
+        healAmount *= random.nextInt(5, 10);
+        // base mana multiplied by random multiplier
+        manaAmount *= random.nextInt(5, 10);
+
+        p1Entity.healHP(healAmount);
+        p1Entity.healMana(manaAmount);
+
+        roundNumber++;
+        return false;
+    }
+
     public boolean recordWin(boolean player1Won) {
-        if(player1Won) {
+        if (player1Won) {
             p1Wins++;
         } else {
             p2Wins++;
@@ -57,7 +114,7 @@ public class GameBattle {
         roundWinner = player1Won ? player1.getName() : player2.getName();
         roundNumber++;
 
-        if(p1Wins >= WINS_REQUIRED || p2Wins >= WINS_REQUIRED) {
+        if (p1Wins >= WINS_REQUIRED || p2Wins >= WINS_REQUIRED) {
             seriesWinner = roundWinner;
             return true;
         }
@@ -68,55 +125,28 @@ public class GameBattle {
         return entityPool.get(type);
     }
 
-    public Entity getEntity1() {
+    public Entity getEntityOne() {
         return entityPool.get(player1);
     }
 
-    public Entity getEntity2() {
-        return entityPool.get(player2);
+    public Entity getEntityTwo() {
+        return player2 != null ? entityPool.get(player2) : null;
     }
 
-    public GameMode getGameMode() {
-        return gameMode;
-    }
+    public GameMode      getGameMode()     { return gameMode; }
+    public GameCharacter getPlayerOne()      { return player1; }
+    public GameCharacter getPlayerTwo()      { return player2; }
+    public String        getRoundWinner()  { return roundWinner; }
+    public String        getSeriesWinner() { return seriesWinner; }
+    public int           getPlayerOneWins()       { return p1Wins; }
+    public int           getPlayerTwoWins()       { return p2Wins; }
+    public int           getRoundNumber()  { return roundNumber; }
 
-    public GameCharacter getPlayer1() {
-        return player1;
-    }
+    public int     getTotalEnemiesDefeated() { return totalEnemiesDefeated; }
+    public int     getTotalEnemies()         { return arcadeEnemyQueue.size(); }
+    public boolean isArcadeVictory()         { return arcadeVictory; }
 
-    public GameCharacter getPlayer2() {
-        return player2;
-    }
-
-    public String getRoundWinner() {
-        return roundWinner;
-    }
-
-    public String getSeriesWinner() {
-        return seriesWinner;
-    }
-
-    public int getP1Wins() {
-        return p1Wins;
-    }
-
-    public int getP2Wins() {
-        return p2Wins;
-    }
-
-    public int getRoundNumber() {
-        return roundNumber;
-    }
-
-    public void setGameMode(GameMode gameMode) {
-        this.gameMode = gameMode;
-    }
-
-    public void setPlayer1(GameCharacter player1) {
-        this.player1 = player1;
-    }
-
-    public void setPlayer2(GameCharacter player2) {
-        this.player2 = player2;
-    }
+    public void setGameMode(GameMode gameMode)       { this.gameMode = gameMode; }
+    public void setPlayerOne(GameCharacter player1)    { this.player1 = player1; }
+    public void setPlayerTwo(GameCharacter player2)    { this.player2 = player2; }
 }

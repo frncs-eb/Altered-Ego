@@ -40,26 +40,36 @@ public class CharacterSelect extends ScreenBase {
 
     private void onSelection(GameCharacter character) {
         GameBattle battle = screen.getBattle();
-        boolean isPvP = battle.getGameMode() == GameMode.VS_PLAYER;
+        GameMode mode = battle.getGameMode();
+        boolean isPvP = mode == GameMode.VS_PLAYER;
+        boolean isArcade = mode == GameMode.ARCADE;
 
-        if(selectionRound == 1) {
-            battle.setPlayer1(character);
+        if (selectionRound == 1) {
+            battle.setPlayerOne(character);
             characterButtons.get(character).setEnabled(false);
-            if(isPvP) {
+
+            if (isPvP) {
                 selectionRound = 2;
+            } else if (isArcade) { //for arcade
+                List<GameCharacter> enemies = new ArrayList<>();
+                for (GameCharacter gc : GameCharacter.values()) {
+                    if (gc != character) enemies.add(gc);
+                }
+                java.util.Collections.shuffle(enemies);
+                battle.setupArcade(enemies);
+                screen.changeScreen(GameScreen.BATTLE_ARCADE);
             } else {
                 List<GameCharacter> available = new ArrayList<>();
-                for(Map.Entry<GameCharacter, JButton> entry : characterButtons.entrySet()) {
-                    if(entry.getValue().isEnabled()) {
-                        available.add(entry.getKey());
-                    }
+                for (Map.Entry<GameCharacter, JButton> entry : characterButtons.entrySet()) {
+                    if (entry.getValue().isEnabled()) available.add(entry.getKey());
                 }
                 GameCharacter cpuPick = available.get(Util.rng(0, available.size() - 1));
-                battle.setPlayer2(cpuPick);
+                battle.setPlayerTwo(cpuPick);
                 screen.changeScreen(GameScreen.BATTLE);
             }
         } else {
-            battle.setPlayer2(character);
+            // PvP round 2 selection
+            battle.setPlayerTwo(character);
             screen.changeScreen(GameScreen.BATTLE);
         }
     }

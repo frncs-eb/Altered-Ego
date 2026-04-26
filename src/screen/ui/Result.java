@@ -35,7 +35,7 @@ public class Result extends ScreenBase {
             GameMode mode = battle.getGameMode();
             GameCharacter p1 = battle.getPlayerOne();
             GameCharacter p2 = battle.getPlayerTwo();
-            battle.resetSeries();
+            battle.reset();
             battle.setGameMode(mode);
             battle.setPlayerOne(p1);
             battle.setPlayerTwo(p2);
