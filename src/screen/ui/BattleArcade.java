@@ -111,8 +111,8 @@ public class BattleArcade extends ScreenBase {
     public void startBattle() {
         GameBattle battle = screen.getBattle();
 
-        player1 = battle.getEntity1();
-        player2 = battle.getEntity2();
+        player1 = battle.getEntityOne();
+        player2 = battle.getEntityTwo();
 
         if (player1 == null || player2 == null) {
             combatLog.setText("Error: battle not initialised.");

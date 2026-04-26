@@ -43,7 +43,7 @@ public class CharacterSelect extends ScreenBase {
         boolean isPvP = battle.getGameMode() == GameMode.VS_PLAYER;
 
         if(selectionRound == 1) {
-            battle.setPlayer1(character);
+            battle.setPlayerOne(character);
             characterButtons.get(character).setEnabled(false);
             if(isPvP) {
                 selectionRound = 2;
@@ -55,11 +55,11 @@ public class CharacterSelect extends ScreenBase {
                     }
                 }
                 GameCharacter cpuPick = available.get(Util.rng(0, available.size() - 1));
-                battle.setPlayer2(cpuPick);
+                battle.setPlayerTwo(cpuPick);
                 screen.changeScreen(GameScreen.BATTLE);
             }
         } else {
-            battle.setPlayer2(character);
+            battle.setPlayerTwo(character);
             screen.changeScreen(GameScreen.BATTLE);
         }
     }

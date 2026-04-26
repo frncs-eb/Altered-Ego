@@ -20,7 +20,7 @@ public class GameBattle {
 
     private static final int WINS_REQUIRED = 2;
 
-    public void reset() {
+    public void resetSeries() {
         gameMode = null;
 
         player1 = null;
@@ -68,11 +68,11 @@ public class GameBattle {
         return entityPool.get(type);
     }
 
-    public Entity getEntity1() {
+    public Entity getEntityOne() {
         return entityPool.get(player1);
     }
 
-    public Entity getEntity2() {
+    public Entity getEntityTwo() {
         return entityPool.get(player2);
     }
 
@@ -80,11 +80,11 @@ public class GameBattle {
         return gameMode;
     }
 
-    public GameCharacter getPlayer1() {
+    public GameCharacter getPlayerOne() {
         return player1;
     }
 
-    public GameCharacter getPlayer2() {
+    public GameCharacter getPlayerTwo() {
         return player2;
     }
 
@@ -96,11 +96,11 @@ public class GameBattle {
         return seriesWinner;
     }
 
-    public int getP1Wins() {
+    public int getPlayerOneWins() {
         return p1Wins;
     }
 
-    public int getP2Wins() {
+    public int getPlayerTwoWins() {
         return p2Wins;
     }
 
@@ -112,11 +112,11 @@ public class GameBattle {
         this.gameMode = gameMode;
     }
 
-    public void setPlayer1(GameCharacter player1) {
+    public void setPlayerOne(GameCharacter player1) {
         this.player1 = player1;
     }
 
-    public void setPlayer2(GameCharacter player2) {
+    public void setPlayerTwo(GameCharacter player2) {
         this.player2 = player2;
     }
 }

@@ -41,7 +41,7 @@ public class Screen {
         };
 
         if(gameScreen == GameScreen.TITLE) {
-            gameBattle.reset();
+            gameBattle.resetSeries();
         }
 
         if(gameScreen == GameScreen.SELECT_CHARACTER) {
