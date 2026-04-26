@@ -1,8 +1,10 @@
 package screen.ui;
 
+import screen.Screen;
+import screen.ScreenBase;
+import util.GameMode;
+import util.GameScreen;
 import javax.swing.*;
-import screen.*;
-import util.*;
 
 public class ModeSelect extends ScreenBase {
     public ModeSelect(Screen screen) {

@@ -16,12 +16,6 @@ public enum GameScreen {
     /** The battle screen. */
     BATTLE,
 
-    /** The arcade screen */
-    BATTLE_ARCADE,
-
     /** The result screen. */
-    RESULT,
-
-    /** The result for the arcade screen*/
-    ARCADE_RESULT
+    RESULT
 }

@@ -1,9 +1,13 @@
 package screen.ui;
 
-import java.awt.*;
+import screen.Screen;
+import screen.ScreenBase;
+import util.GameBattle;
+import util.GameCharacter;
+import util.GameMode;
+import util.GameScreen;
 import javax.swing.*;
-import screen.*;
-import util.*;
+import java.awt.*;
 
 public class Result extends ScreenBase {
     private JLabel winnerLabel;
@@ -29,12 +33,12 @@ public class Result extends ScreenBase {
         rematchButton.addActionListener(e -> {
             GameBattle battle = screen.getBattle();
             GameMode mode = battle.getGameMode();
-            GameCharacter p1 = battle.getPlayer1();
-            GameCharacter p2 = battle.getPlayer2();
-            battle.reset();
+            GameCharacter p1 = battle.getPlayerOne();
+            GameCharacter p2 = battle.getPlayerTwo();
+            battle.resetSeries();
             battle.setGameMode(mode);
-            battle.setPlayer1(p1);
-            battle.setPlayer2(p2);
+            battle.setPlayerOne(p1);
+            battle.setPlayerTwo(p2);
             screen.changeScreen(GameScreen.BATTLE);
         });
 
@@ -46,6 +50,6 @@ public class Result extends ScreenBase {
         GameBattle state = screen.getBattle();
         String winner = state.getSeriesWinner();
         winnerLabel.setText(winner != null ? winner + " wins!" : "");
-        scoreLabel.setText(state.getP1Wins() + " - " + state.getP2Wins());
+        scoreLabel.setText(state.getPlayerOneWins() + " - " + state.getPlayerTwoWins());
     }
 }
