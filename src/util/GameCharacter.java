@@ -1,8 +1,5 @@
 package util;
 
-/**
- * Represents the character constants of the game.
- */
 public enum GameCharacter {
     COSMIC_DASEL(
             "Cosmic Dasel",
