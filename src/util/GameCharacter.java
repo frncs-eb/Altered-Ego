@@ -63,30 +63,30 @@ public enum GameCharacter {
     );
 
     private final String name;
-    private final String skill1Name;
-    private final String skill2Name;
-    private final String skill3Name;
+    private final String skillOneName;
+    private final String skillTwoName;
+    private final String skillThreeName;
 
     GameCharacter(String name, String skill1Name, String skill2Name, String skill3Name) {
         this.name = name;
-        this.skill1Name = skill1Name;
-        this.skill2Name = skill2Name;
-        this.skill3Name = skill3Name;
+        this.skillOneName = skill1Name;
+        this.skillTwoName = skill2Name;
+        this.skillThreeName = skill3Name;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getSkill1Name() {
-        return skill1Name;
+    public String getSkillOneName() {
+        return skillOneName;
     }
 
-    public String getSkill2Name() {
-        return skill2Name;
+    public String getSkillTwoName() {
+        return skillTwoName;
     }
 
-    public String getSkill3Name() {
-        return skill3Name;
+    public String getSkillThreeName() {
+        return skillThreeName;
     }
 }
