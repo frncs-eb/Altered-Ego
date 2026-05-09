@@ -1,78 +1,104 @@
 package util;
 
 public enum GameCharacter {
+    // Ok na
     COSMIC_DASEL(
             "Cosmic Dasel",
             "Provoked Punch",
             "Bug Overflow",
-            "Overclock"
+            "Overclock",
+            new int[]{ 6, 6, 6, 6, 6, 6 }
     ),
+    // Ok na
     KANIEL_OUTIS(
             "Kaniel Outis",
             "Image Burn",
             "Spirit Compression",
-            "Sanity Drain"
+            "Sanity Drain",
+            new int[]{ 14, 12, 14, 12, 14, 12 }
     ),
+    // Wala pa
     KHYLLE_THE_REAPER(
             "Khylle The Reaper",
             "Karate Kick",
             "Flying Food",
-            "Voice Of Destruction"
+            "Voice Of Destruction",
+            new int[]{ 4, 4, 4, 5, 5, 5 }
     ),
+    // Wala pa
     VAN_BERKSVILLE(
             "Van Berksville",
             "Stab",
             "Getsuga",
-            "Fang Sword Style"
+            "Fang Sword Style",
+            new int[]{ 4, 4, 5, 6, 7, 11 }
     ),
+    // Wala pa
     EARL(
             "Earl",
             "Knee Strike",
             "Double Kick",
-            "Dodge"
+            "Dodge",
+            new int[]{ 6, 6, 5, 6, 5, 5 }
     ),
+    // Wala pa
     ASTA_CLOVER(
             "Asta Clover",
             "Arcane Blast",
             "Whirlwind",
-            "Block"
+            "Block",
+            new int[]{ 6, 6, 6, 5, 7, 6 }
     ),
+    // Wala pa
     THE_ONE_JOHN(
             "The One John",
             "Uppercut",
             "Counter Palm",
-            "Flaring Punches"
+            "Flaring Punches",
+            new int[]{ 4, 5, 3, 4, 6, 6 }
     ),
+    // Wala pa
     JF_VOID(
             "JF Void",
             "Void Chop",
             "Void Deflect",
-            "Void Stagger Palm"
+            "Void Stagger Palm",
+            new int[]{ 6, 6, 6, 6, 6, 6, 6 }
     ),
+    // Wala pa
     AND_REW(
             "And Rew",
             "Dragon Fist",
             "Draco Fist Missiles",
-            "Dragon's Verdict Of Demise"
+            "Dragon's Verdict Of Demise",
+            new int[]{ 4, 6, 6, 4, 11, 14 }
     ),
+    // Ok na
     DEIDRE(
             "Deidre",
             "Lightning Cut",
             "Thunder Cleave",
-            "Final Turn"
+            "Final Turn",
+            new int[]{ 6, 6, 6, 4, 6, 9 }
     );
 
     private final String name;
     private final String skillOneName;
     private final String skillTwoName;
     private final String skillThreeName;
+    private final int[]  frameCounts; // [idle, basicAtk, takeDmg, sk1, sk2, sk3, death]
 
-    GameCharacter(String name, String skill1Name, String skill2Name, String skill3Name) {
-        this.name = name;
-        this.skillOneName = skill1Name;
-        this.skillTwoName = skill2Name;
-        this.skillThreeName = skill3Name;
+    GameCharacter(String name,
+                  String skill1, String skill2, String skill3,
+                  int[] frameCounts) {
+        this.name          = name;
+        this.skillOneName  = skill1;
+        this.skillTwoName  = skill2;
+        this.skillThreeName= skill3;
+        this.frameCounts   = frameCounts;
     }
+
+    public int[] getFrameCounts() { return frameCounts; }
 
     public String getName() {
         return name;

@@ -1,7 +1,8 @@
 import core.AlteredEgo;
+import javax.swing.*;
 
 public class Main {
     public void main() {
-        new AlteredEgo();
+        SwingUtilities.invokeLater(AlteredEgo::new);
     }
 }

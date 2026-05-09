@@ -1,67 +1,117 @@
 package screen.ui;
 
+import entity.AnimationState;
 import entity.Entity;
 import entity.Skill;
+import graphic.Graphic;
 import screen.Screen;
 import screen.ScreenBase;
 import util.GameBattle;
+import util.GameCharacter;
 import util.GameMode;
 import util.GameScreen;
+
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * PvP and PvC battle screen.
+ *
+ * Sprite sheet format (one PNG per character):
+ *   row 0 → IDLE
+ *   row 1 → TAKE_DAMAGE
+ *   row 2 → BASIC_ATTACK
+ *   row 3 → SKILL_1
+ *   row 4 → SKILL_2
+ *   row 5 → SKILL_3
+ *
+ * Player 2's sprite is flipped horizontally so it faces player 1.
+ *
+ * Animation rules:
+ *   - Only the attacker plays an attack animation.
+ *   - Only the defender plays TAKE_DAMAGE.
+ *   - Both return to IDLE automatically when the one-shot finishes.
+ *
+ * Edit FRAME_WIDTH, FRAME_HEIGHT, and the per-character frame counts in
+ * GameCharacter to match your actual sprite sheets.
+ */
 public class Battle extends ScreenBase {
+
+    // ── Sprite sheet config ─────────────────────────────────────────────────
+    private static final int FRAME_WIDTH  = 64;
+    private static final int FRAME_HEIGHT = 64;
+
+    /** On-screen bounds: x, y, width, height */
+    private static final int[] P1_SPRITE_BOUNDS = {  60, 260, 200, 200 };
+    private static final int[] P2_SPRITE_BOUNDS = { 460, 260, 200, 200 };
+
+    // ── Sprites ─────────────────────────────────────────────────────────────
+    private final Graphic p1Graphic = new Graphic();
+    private final Graphic p2Graphic = new Graphic();
+
+    // ── Battle state ─────────────────────────────────────────────────────────
     private static final int TURN_TIME = 10;
-    private Entity player1;
-    private Entity player2;
+
+    private Entity  player1;
+    private Entity  player2;
     private boolean isPlayer1Turn;
     private boolean battleOver;
-    private JLabel p1NameLabel;
-    private JLabel p1HpLabel;
-    private JLabel p1ManaLabel;
-    private JProgressBar p1HpBar;
-    private JProgressBar p1ManaBar;
-    private JLabel p2NameLabel;
-    private JLabel p2HpLabel;
-    private JLabel p2ManaLabel;
-    private JProgressBar p2HpBar;
-    private JProgressBar p2ManaBar;
-    private JLabel roundLabel;
-    private JLabel scoreLabel;
-    private JLabel countdownLabel;
-    private JLabel turnLabel;
-    private JLabel combatLog;
-    private JButton basicAttackButton;
-    private JButton skill1Button;
-    private JButton skill2Button;
-    private JButton skill3Button;
+
     private Timer turnTimer;
-    private int turnTimeLeft;
+    private int   turnTimeLeft;
+
+    // ── UI ───────────────────────────────────────────────────────────────────
+    private JLabel       p1NameLabel, p1HpLabel, p1ManaLabel;
+    private JProgressBar p1HpBar, p1ManaBar;
+
+    private JLabel       p2NameLabel, p2HpLabel, p2ManaLabel;
+    private JProgressBar p2HpBar, p2ManaBar;
+
+    private JLabel roundLabel, scoreLabel, countdownLabel, turnLabel, combatLog;
+
+    private JButton basicAttackButton, skill1Button, skill2Button, skill3Button;
+
+    // ── Construction ──────────────────────────────────────────────────────────
 
     public Battle(Screen screen) {
         super(screen);
+        // Player 2 always faces left toward player 1
+        p2Graphic.setFlipped(true);
     }
+
+    // ── ScreenBase hooks ──────────────────────────────────────────────────────
 
     @Override
     protected void initializeUI() {
+        // ── P1 HUD ────────────────────────────────────────────────────────────
         p1NameLabel = createLabel("P1", 45, 30, 200, 20);
         p1NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
         p1HpLabel = createLabel("HP: 500/500", 45, 60, 200, 20);
         p1HpLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
+        p1HpBar = createBar(45, 78, 200, 14, Color.decode("#4caf50"));
+
         p1ManaLabel = createLabel("MP: 200/200", 45, 100, 200, 20);
         p1ManaLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        p1HpBar = createBar(45, 82, 200, 14, Color.decode("#4caf50"));
-        p1ManaBar = createBar(45, 122, 200, 14, Color.decode("#2196f3"));
 
+        p1ManaBar = createBar(45, 118, 200, 14, Color.decode("#2196f3"));
+
+        // ── P2 HUD ────────────────────────────────────────────────────────────
         p2NameLabel = createLabel("P2", 465, 30, 200, 20);
         p2NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
         p2HpLabel = createLabel("HP: 500/500", 465, 60, 200, 20);
         p2HpLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
+        p2HpBar = createBar(465, 78, 200, 14, Color.decode("#4caf50"));
+
         p2ManaLabel = createLabel("MP: 200/200", 465, 100, 200, 20);
         p2ManaLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        p2HpBar = createBar(465, 82, 200, 14, Color.decode("#4caf50"));
-        p2ManaBar = createBar(465, 122, 200, 14, Color.decode("#2196f3"));
 
+        p2ManaBar = createBar(465, 118, 200, 14, Color.decode("#2196f3"));
+
+        // ── Centre ────────────────────────────────────────────────────────────
         roundLabel = createLabel("Round 1", 255, 10, 200, 25);
         roundLabel.setHorizontalAlignment(SwingConstants.CENTER);
         roundLabel.setFont(new Font("Arial", Font.BOLD, 16));
@@ -82,21 +132,41 @@ public class Battle extends ScreenBase {
         turnLabel.setFont(new Font("Arial", Font.BOLD, 16));
         turnLabel.setForeground(Color.DARK_GRAY);
 
-        combatLog = createLabel("", 55, 210, 600, 30);
+        combatLog = createLabel("", 55, 475, 600, 30);
         combatLog.setHorizontalAlignment(SwingConstants.CENTER);
         combatLog.setFont(new Font("Arial", Font.ITALIC, 14));
         combatLog.setForeground(Color.DARK_GRAY);
 
-        basicAttackButton = createButton("Basic Attack", 255, 550, 200, 50);
-        skill1Button = createButton("", 65, 620, 140, 50);
-        skill2Button = createButton("", 285, 620, 140, 50);
-        skill3Button = createButton("", 500, 620, 140, 50);
+        // ── Buttons ───────────────────────────────────────────────────────────
+        basicAttackButton = createButton("Basic Attack", 255, 530, 200, 50);
+        skill1Button      = createButton("Skill 1",       65, 595, 140, 50);
+        skill2Button      = createButton("Skill 2",      285, 595, 140, 50);
+        skill3Button      = createButton("Skill 3",      500, 595, 140, 50);
 
         basicAttackButton.addActionListener(e -> handleAction(0));
-        skill1Button.addActionListener(e -> handleAction(1));
-        skill2Button.addActionListener(e -> handleAction(2));
-        skill3Button.addActionListener(e -> handleAction(3));
+        skill1Button     .addActionListener(e -> handleAction(1));
+        skill2Button     .addActionListener(e -> handleAction(2));
+        skill3Button     .addActionListener(e -> handleAction(3));
     }
+
+    @Override
+    protected void onAnimationTick() {
+        p1Graphic.update();
+        p2Graphic.update();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        p1Graphic.draw(g,
+                P1_SPRITE_BOUNDS[0], P1_SPRITE_BOUNDS[1],
+                P1_SPRITE_BOUNDS[2], P1_SPRITE_BOUNDS[3]);
+        p2Graphic.draw(g,
+                P2_SPRITE_BOUNDS[0], P2_SPRITE_BOUNDS[1],
+                P2_SPRITE_BOUNDS[2], P2_SPRITE_BOUNDS[3]);
+    }
+
+    // ── Public API ────────────────────────────────────────────────────────────
 
     public void startBattle() {
         GameBattle battle = screen.getBattle();
@@ -106,39 +176,58 @@ public class Battle extends ScreenBase {
         player2 = battle.getEntityTwo();
 
         isPlayer1Turn = true;
-        battleOver = false;
+        battleOver    = false;
 
-        refreshNamesLabels();
+        loadSprites(p1Graphic, battle.getPlayerOne());
+        loadSprites(p2Graphic, battle.getPlayerTwo());
+        p1Graphic.setState(AnimationState.IDLE);
+        p2Graphic.setState(AnimationState.IDLE);
+
+        refreshNameLabels();
         refreshBars();
         refreshRoundLabels();
         refreshTurnLabel();
         refreshSkillButtons(player1);
         combatLog.setText("Round " + battle.getRoundNumber() + " — Fight!");
 
-        boolean isCpu = battle.getGameMode() != GameMode.VS_PLAYER;
-        if (isCpu) {
+        if (battle.getGameMode() != GameMode.VS_PLAYER) {
             startTurnTimer();
         }
     }
 
+    // ── Sprite loading ────────────────────────────────────────────────────────
+
+    private void loadSprites(Graphic graphic, GameCharacter character) {
+        String path = "/" + character.name().toLowerCase() + ".png";
+        graphic.loadAllAnimations(path, FRAME_WIDTH, FRAME_HEIGHT, character.getFrameCounts());
+    }
+
+    // ── Action handling ───────────────────────────────────────────────────────
+
     private void handleAction(int actionIndex) {
-        if (battleOver) {
-            return;
-        }
+        if (battleOver) return;
 
-        Entity attacker = isPlayer1Turn ? player1 : player2;
-        Entity defender = isPlayer1Turn ? player2 : player1;
+        Entity  attacker        = isPlayer1Turn ? player1 : player2;
+        Entity  defender        = isPlayer1Turn ? player2 : player1;
+        Graphic attackerGraphic = isPlayer1Turn ? p1Graphic : p2Graphic;
+        Graphic defenderGraphic = isPlayer1Turn ? p2Graphic : p1Graphic;
 
-        int damage = 0;
         String logMessage;
 
         if (actionIndex == 0) {
+            // ── Basic attack ──────────────────────────────────────────────────
             int hpBefore = defender.getCurrentHP();
             attacker.basicAttack(defender);
-            damage = hpBefore - defender.getCurrentHP();
+            int damage = hpBefore - defender.getCurrentHP();
+
+            attackerGraphic.playOnce(AnimationState.BASIC_ATTACK);
+            defenderGraphic.playOnce(AnimationState.TAKE_DAMAGE);
+
             logMessage = attacker.getName() + " used Basic Attack for " + damage + " damage!";
         } else {
+            // ── Skill ─────────────────────────────────────────────────────────
             Skill skill = attacker.getSkill(actionIndex);
+
             if (skill.isCooldown()) {
                 combatLog.setText(skill.getName() + " is on cooldown! (" + skill.getCurrentCooldown() + " turns left)");
                 return;
@@ -147,12 +236,26 @@ public class Battle extends ScreenBase {
                 combatLog.setText("Not enough mana to use " + skill.getName() + "!");
                 return;
             }
+
             int hpBefore = defender.getCurrentHP();
             attacker.useSkill(actionIndex, defender);
-            damage = hpBefore - defender.getCurrentHP();
+            int damage = hpBefore - defender.getCurrentHP();
+
+            AnimationState skillAnim = switch (actionIndex) {
+                case 1 -> AnimationState.SKILL_1;
+                case 2 -> AnimationState.SKILL_2;
+                case 3 -> AnimationState.SKILL_3;
+                default -> AnimationState.BASIC_ATTACK;
+            };
+
+            // Only the attacker plays attack — only the defender plays take damage
+            attackerGraphic.playOnce(skillAnim);
+            defenderGraphic.playOnce(AnimationState.TAKE_DAMAGE);
+
             logMessage = attacker.getName() + " used " + skill.getName() + " for " + damage + " damage!";
         }
 
+        stopTurnTimer();
         attacker.reduceCooldowns();
         attacker.regenMana();
         combatLog.setText(logMessage);
@@ -171,11 +274,11 @@ public class Battle extends ScreenBase {
             scheduleCpuTurn();
         } else {
             refreshSkillButtons(isPlayer1Turn ? player1 : player2);
-            if (isCpu) {
-                startTurnTimer();
-            }
+            if (isCpu) startTurnTimer();
         }
     }
+
+    // ── Turn timer ────────────────────────────────────────────────────────────
 
     private void startTurnTimer() {
         stopTurnTimer();
@@ -196,28 +299,23 @@ public class Battle extends ScreenBase {
     }
 
     private void stopTurnTimer() {
-        if (turnTimer != null && turnTimer.isRunning()) {
-            turnTimer.stop();
-        }
+        if (turnTimer != null && turnTimer.isRunning()) turnTimer.stop();
         countdownLabel.setVisible(false);
     }
 
+    // ── CPU ───────────────────────────────────────────────────────────────────
+
     private void scheduleCpuTurn() {
         setActionButtonsEnabled(false);
-        Timer timer = new Timer(1000, e -> {
+        new Timer(1000, e -> {
             cpuTakeTurn();
             ((Timer) e.getSource()).stop();
-        });
-        timer.start();
+        }).start();
     }
 
     private void cpuTakeTurn() {
-        if (battleOver) {
-            return;
-        }
-
-        int[] priority = {3, 2, 1};
-        for (int i : priority) {
+        if (battleOver) return;
+        for (int i : new int[]{ 3, 2, 1 }) {
             Skill skill = player2.getSkill(i);
             if (!skill.isCooldown() && player2.getCurrentMana() >= skill.getManaCost()) {
                 handleAction(i);
@@ -227,54 +325,55 @@ public class Battle extends ScreenBase {
         handleAction(0);
     }
 
+    // ── Battle end ────────────────────────────────────────────────────────────
+
     private void endBattle(Entity winner) {
         battleOver = true;
+        stopTurnTimer();
         setActionButtonsEnabled(false);
 
         GameBattle battle = screen.getBattle();
-        boolean p1Won = winner == player1;
+        boolean p1Won      = (winner == player1);
         boolean seriesOver = battle.recordWin(p1Won);
 
         refreshRoundLabels();
 
         if (seriesOver) {
             combatLog.setText(winner.getName() + " wins the series!");
-            Timer timer = new Timer(2000, e -> {
+            new Timer(2000, e -> {
                 screen.changeScreen(GameScreen.RESULT);
                 ((Timer) e.getSource()).stop();
-            });
-            timer.start();
+            }).start();
         } else {
             combatLog.setText(winner.getName() + " wins round " + (battle.getRoundNumber() - 1) + "!");
-            Timer timer = new Timer(2000, e -> {
+            new Timer(2000, e -> {
                 screen.changeScreen(GameScreen.BATTLE);
                 ((Timer) e.getSource()).stop();
-            });
-            timer.start();
+            }).start();
         }
     }
 
-    private void refreshNamesLabels() {
+    // ── HUD refresh ───────────────────────────────────────────────────────────
+
+    private void refreshNameLabels() {
         p1NameLabel.setText(player1.getName());
         p2NameLabel.setText(player2.getName());
     }
 
     private void refreshBars() {
-        p1HpLabel.setText("HP: " + player1.getCurrentHP() + "/" + player1.getBaseHP());
-        p1HpBar.setMaximum(player1.getBaseHP());
-        p1HpBar.setValue(player1.getCurrentHP());
-
+        p1HpLabel  .setText("HP: " + player1.getCurrentHP()   + "/" + player1.getBaseHP());
+        p1HpBar    .setMaximum(player1.getBaseHP());
+        p1HpBar    .setValue(player1.getCurrentHP());
         p1ManaLabel.setText("MP: " + player1.getCurrentMana() + "/" + player1.getBaseMana());
-        p1ManaBar.setMaximum(player1.getBaseMana());
-        p1ManaBar.setValue(player1.getCurrentMana());
+        p1ManaBar  .setMaximum(player1.getBaseMana());
+        p1ManaBar  .setValue(player1.getCurrentMana());
 
-        p2HpLabel.setText("HP: " + player2.getCurrentHP() + "/" + player2.getBaseHP());
-        p2HpBar.setMaximum(player2.getBaseHP());
-        p2HpBar.setValue(player2.getCurrentHP());
-
+        p2HpLabel  .setText("HP: " + player2.getCurrentHP()   + "/" + player2.getBaseHP());
+        p2HpBar    .setMaximum(player2.getBaseHP());
+        p2HpBar    .setValue(player2.getCurrentHP());
         p2ManaLabel.setText("MP: " + player2.getCurrentMana() + "/" + player2.getBaseMana());
-        p2ManaBar.setMaximum(player2.getBaseMana());
-        p2ManaBar.setValue(player2.getCurrentMana());
+        p2ManaBar  .setMaximum(player2.getBaseMana());
+        p2ManaBar  .setValue(player2.getCurrentMana());
     }
 
     private void refreshRoundLabels() {
@@ -284,40 +383,31 @@ public class Battle extends ScreenBase {
     }
 
     private void refreshTurnLabel() {
-        Entity active = isPlayer1Turn ? player1 : player2;
-        boolean isCpu = screen.getBattle().getGameMode() != GameMode.VS_PLAYER && !isPlayer1Turn;
+        Entity  active = isPlayer1Turn ? player1 : player2;
+        boolean isCpu  = screen.getBattle().getGameMode() != GameMode.VS_PLAYER && !isPlayer1Turn;
         turnLabel.setText(active.getName() + "'s turn" + (isCpu ? " (CPU)" : ""));
     }
 
     private void refreshSkillButtons(Entity active) {
         setActionButtonsEnabled(true);
         for (int i = 1; i <= 3; i++) {
-            Skill skill = active.getSkill(i);
-            JButton btn = i == 1 ? skill1Button : i == 2 ? skill2Button : skill3Button;
+            Skill   skill  = active.getSkill(i);
+            JButton btn    = switch (i) { case 1 -> skill1Button; case 2 -> skill2Button; default -> skill3Button; };
             boolean usable = !skill.isCooldown() && active.getCurrentMana() >= skill.getManaCost();
-            if (skill.isCooldown()) {
-                btn.setText(skill.getName() + " (CD:" + skill.getCurrentCooldown() + ")");
-            } else {
-                btn.setText(skill.getName() + " (" + skill.getManaCost() + "MP)");
-            }
+            btn.setText(skill.isCooldown()
+                    ? skill.getName() + " (CD:" + skill.getCurrentCooldown() + ")"
+                    : skill.getName() + " (" + skill.getManaCost() + "MP)");
             btn.setEnabled(usable);
         }
     }
 
     private void setActionButtonsEnabled(boolean enabled) {
         basicAttackButton.setEnabled(enabled);
-        skill1Button.setEnabled(enabled);
-        skill2Button.setEnabled(enabled);
-        skill3Button.setEnabled(enabled);
+        skill1Button     .setEnabled(enabled);
+        skill2Button     .setEnabled(enabled);
+        skill3Button     .setEnabled(enabled);
     }
 
-    @Override
-    protected void hideButtons() {
-
-    }
-
-    @Override
-    protected void showButtons() {
-
-    }
+    @Override protected void hideButtons() { }
+    @Override protected void showButtons()  { }
 }

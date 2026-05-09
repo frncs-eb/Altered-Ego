@@ -80,13 +80,13 @@ public class ArcadeResult extends ScreenBase {
     }
 
     /**
-     * Called by Screen.changeScreen(ARCADE_RESULT) to populate the result view.
+     * Called by Screen.changeScreen(RESULT_ARCADE) to populate the result view.
      */
 
     public void showResult() {
         GameBattle battle = screen.getBattle();
         boolean victory   = battle.isArcadeVictory();
-        int defeated      = battle.getTotalEnemiesDefeated();
+        int defeated      = battle.getArcadeEnemiesDefeated();
         int total         = battle.getTotalEnemies();
 
         if (victory) {
@@ -119,7 +119,7 @@ public class ArcadeResult extends ScreenBase {
         // Sanitise: strip commas so CSV stays clean
         name = name.replace(",", "");
 
-        int kills = screen.getBattle().getTotalEnemiesDefeated();
+        int kills = screen.getBattle().getArcadeEnemiesDefeated();
         Leaderboard.save(name, kills);
 
         nameField.setEnabled(false);

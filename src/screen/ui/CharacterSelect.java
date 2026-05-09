@@ -48,6 +48,7 @@ public class CharacterSelect extends ScreenBase {
             battle.setPlayerOne(character);
             characterButtons.get(character).setEnabled(false);
 
+            // TODO: Need to chane logic of setting the enemeies.
             if (isPvP) {
                 selectionRound = 2;
             } else if (isArcade) {
@@ -56,7 +57,7 @@ public class CharacterSelect extends ScreenBase {
                     if (gc != character) enemies.add(gc);
                 }
                 java.util.Collections.shuffle(enemies);
-                battle.setupArcade(enemies);
+                battle.resetArcade(enemies);
                 screen.changeScreen(GameScreen.BATTLE_ARCADE);
             } else {
                 List<GameCharacter> available = new ArrayList<>();

@@ -43,7 +43,7 @@ public class Screen {
             case BATTLE           -> battle;
             case BATTLE_ARCADE    -> battleArcade;   //for arcade
             case RESULT           -> result;
-            case ARCADE_RESULT    -> arcadeResult;   //for arcade
+            case RESULT_ARCADE    -> arcadeResult;   //for arcade
         };
 
         if(gameScreen == GameScreen.TITLE) {
@@ -62,7 +62,7 @@ public class Screen {
             result.showResult();
         }
 
-        if(gameScreen == GameScreen.ARCADE_RESULT) {   //for arcade
+        if(gameScreen == GameScreen.RESULT_ARCADE) {   //for arcade
             arcadeResult.showResult();
         }
 
