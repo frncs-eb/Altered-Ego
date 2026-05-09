@@ -23,7 +23,7 @@ public enum GameCharacter {
             "Karate Kick",
             "Flying Food",
             "Voice Of Destruction",
-            new int[]{ 4, 4, 4, 5, 5, 5 }
+            new int[]{ 0, 0, 0, 0, 0, 0 }
     ),
     // Wala pa
     VAN_BERKSVILLE(
@@ -31,7 +31,7 @@ public enum GameCharacter {
             "Stab",
             "Getsuga",
             "Fang Sword Style",
-            new int[]{ 4, 4, 5, 6, 7, 11 }
+            new int[]{ 0, 0, 0, 0, 0, 0 }
     ),
     // Wala pa
     EARL(
@@ -39,7 +39,7 @@ public enum GameCharacter {
             "Knee Strike",
             "Double Kick",
             "Dodge",
-            new int[]{ 6, 6, 5, 6, 5, 5 }
+            new int[]{ 0, 0, 0, 0, 0, 0 }
     ),
     // Wala pa
     ASTA_CLOVER(
@@ -47,7 +47,7 @@ public enum GameCharacter {
             "Arcane Blast",
             "Whirlwind",
             "Block",
-            new int[]{ 6, 6, 6, 5, 7, 6 }
+            new int[]{ 0, 0, 0, 0, 0, 0 }
     ),
     // Wala pa
     THE_ONE_JOHN(
@@ -55,7 +55,7 @@ public enum GameCharacter {
             "Uppercut",
             "Counter Palm",
             "Flaring Punches",
-            new int[]{ 4, 5, 3, 4, 6, 6 }
+            new int[]{ 0, 0, 0, 0, 0, 0 }
     ),
     // Wala pa
     JF_VOID(
@@ -63,7 +63,7 @@ public enum GameCharacter {
             "Void Chop",
             "Void Deflect",
             "Void Stagger Palm",
-            new int[]{ 6, 6, 6, 6, 6, 6, 6 }
+            new int[]{ 0, 0, 0, 0, 0, 0 }
     ),
     // Wala pa
     AND_REW(
@@ -71,7 +71,7 @@ public enum GameCharacter {
             "Dragon Fist",
             "Draco Fist Missiles",
             "Dragon's Verdict Of Demise",
-            new int[]{ 4, 6, 6, 4, 11, 14 }
+            new int[]{ 0, 0, 0, 0, 0, 0 }
     ),
     // Ok na
     DEIDRE(
