@@ -107,6 +107,24 @@ public class Graphic {
         }
     }
 
+    /**
+     * Load a single animation state from a horizontal sprite strip (one row).
+     * Use this for backgrounds or other single-purpose sheets.
+     */
+    public void loadStrip(String path, int frameWidth, int frameHeight, int frameCount) {
+        try (InputStream is = getClass().getResourceAsStream(path)) {
+            if (is == null) throw new IOException("Strip not found: " + path);
+            BufferedImage sheet = ImageIO.read(is);
+            BufferedImage[] frames = new BufferedImage[frameCount];
+            for (int col = 0; col < frameCount; col++) {
+                frames[col] = sheet.getSubimage(col * frameWidth, 0, frameWidth, frameHeight);
+            }
+            animations.put(AnimationState.IDLE, frames);
+        } catch (IOException e) {
+            System.err.println("[Graphic] Could not read strip: " + path + " — " + e.getMessage());
+        }
+    }
+
     // ── State control ──────────────────────────────────────────────────────
 
     /** Switch to a looping state (e.g. IDLE). Restarts from frame 0 if state changes. */
