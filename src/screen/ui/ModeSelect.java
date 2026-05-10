@@ -39,7 +39,7 @@ public class ModeSelect extends ScreenBase {
         pvpButton.setBorderPainted(false);
         pvpButton.setFocusable(false);
         pvpButton.addActionListener(e -> {
-            screen.getBattle().setGameMode(GameMode.VS_PLAYER);
+            screen.getBattle().setGameMode(GameMode.VS_COMPUTER);
             screen.changeScreen(GameScreen.SELECT_CHARACTER);
         });
 
@@ -49,7 +49,7 @@ public class ModeSelect extends ScreenBase {
         pveButton.setBorderPainted(false);
         pveButton.setFocusable(false);
         pveButton.addActionListener(e -> {
-            screen.getBattle().setGameMode(GameMode.VS_COMPUTER);
+            screen.getBattle().setGameMode(GameMode.VS_PLAYER);
             screen.changeScreen(GameScreen.SELECT_CHARACTER);
         });
 
