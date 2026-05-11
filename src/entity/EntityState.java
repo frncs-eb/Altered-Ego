@@ -6,70 +6,70 @@ public enum EntityState {
             "Provoked Punch",
             "Bug Overflow",
             "Overclock",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{6, 6, 6, 6, 6, 6}
     ),
     KANIEL_OUTIS(
             "Kaniel Outis",
             "Image Burn",
             "Spirit Compression",
             "Sanity Drain",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{14, 12, 14, 12, 14, 12}
     ),
     KHYLLE_THE_REAPER(
             "Khylle The Reaper",
             "Karate Kick",
             "Flying Food",
             "Voice Of Destruction",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{4, 4, 4, 5, 5, 5}
     ),
     VAN_BERKSVILLE(
             "Van Berksville",
             "Stab",
             "Getsuga",
             "Fang Sword Style",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{4, 4, 5, 6, 6, 11}
     ),
     EARL(
             "Earl",
             "Knee Strike",
             "Double Kick",
             "Dodge",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{6, 6, 5, 6, 5, 5}
     ),
     ASTA_CLOVER(
             "Asta Clover",
             "Arcane Blast",
             "Whirlwind",
             "Block",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{6, 6, 6, 5, 7, 6}
     ),
     THE_ONE_JOHN(
             "The One John",
             "Uppercut",
             "Counter Palm",
             "Flaring Punches",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{6, 5, 7, 7, 6, 8}
     ),
     JF_VOID(
             "JF Void",
             "Void Chop",
             "Void Deflect",
             "Void Stagger Palm",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{5, 6, 5, 5, 5, 8}
     ),
     AND_REW(
             "And Rew",
             "Dragon Fist",
             "Draco Fist Missiles",
             "Dragon's Verdict Of Demise",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{5, 4, 6, 7, 6, 6}
     ),
     DEIDRE(
             "Deidre",
             "Lightning Cut",
             "Thunder Cleave",
             "Final Turn",
-            new int[]{0, 0, 0, 0, 0, 0}
+            new int[]{6, 6, 6, 4, 6, 9}
     );
 
     private final String name;

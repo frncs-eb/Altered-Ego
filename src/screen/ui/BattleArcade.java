@@ -13,30 +13,14 @@ import screen.ScreenState;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Arcade battle screen — player fights a gauntlet of enemies one by one.
- *
- * Sprite setup (same convention as Battle.java):
- *   One 2D sprite sheet per character at:
- *     /sprites/<character_enum_name_lowercase>.png
- *   Rows map to AnimationState.values() in order:
- *     row 0 → IDLE
- *     row 1 → BASIC_ATTACK
- *     row 2 → TAKE_DAMAGE
- *     row 3 → SKILL_1
- *     row 4 → SKILL_2
- *     row 5 → SKILL_3
- *     row 6 → DEATH
- *
- *   Edit FRAME_WIDTH, FRAME_HEIGHT, and FRAME_COUNTS to match your sheets.
- *
- * Key arcade difference from Battle:
- *   - Player HP/mana carry over between fights — p1Graphic is only
- *     reloaded on fight 1. p2Graphic reloads every fight as the enemy changes.
- *   - There is no round system — fights are numbered sequentially.
- *   - The turn timer always runs (always CPU vs player).
- */
 public class BattleArcade extends ScreenBase {
+    private static final int BG_FRAME_WIDTH = 1024;
+    private static final int BG_FRAME_HEIGHT = 1024;
+    private static final int BG_FRAME_COUNT = 1;
+
+    private static final int[] BG_BOUNDS = {0, 0, 706, 683};
+
+    private Graphic bgGraphic = new Graphic();
 
     // ── Sprite sheet config — edit to match your sheets ─────────────────────
     private static final int   FRAME_WIDTH  = 64;
@@ -96,30 +80,36 @@ public class BattleArcade extends ScreenBase {
         // ── P1 HUD ────────────────────────────────────────────────────────────
         p1NameLabel = createLabel("P1", 45, 30, 200, 20);
         p1NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        p1NameLabel.setForeground(Color.WHITE);
 
         p1HpLabel = createLabel("HP: 500/500", 45, 60, 200, 20);
         p1HpLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        p1HpLabel.setForeground(Color.WHITE);
 
-        p1HpBar = createBar(45, 78, 200, 14, Color.decode("#4caf50"));
+        p1HpBar = createBar(45, 78, 200, 14, Color.decode("#e0115f"));
 
         p1ManaLabel = createLabel("MP: 200/200", 45, 100, 200, 20);
         p1ManaLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        p1ManaLabel.setForeground(Color.WHITE);
 
-        p1ManaBar = createBar(45, 118, 200, 14, Color.decode("#2196f3"));
+        p1ManaBar = createBar(45, 118, 200, 14, Color.decode("#4caf50"));
 
-        // ── P2 / Enemy HUD ────────────────────────────────────────────────────
-        p2NameLabel = createLabel("Enemy", 465, 30, 200, 20);
+        // ── P2 HUD ────────────────────────────────────────────────────────────
+        p2NameLabel = createLabel("P2", 465, 30, 200, 20);
         p2NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        p2NameLabel.setForeground(Color.WHITE);
 
         p2HpLabel = createLabel("HP: 500/500", 465, 60, 200, 20);
         p2HpLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        p2HpLabel.setForeground(Color.WHITE);
 
-        p2HpBar = createBar(465, 78, 200, 14, Color.decode("#4caf50"));
+        p2HpBar = createBar(465, 78, 200, 14, Color.decode("#e0115f"));
 
         p2ManaLabel = createLabel("MP: 200/200", 465, 100, 200, 20);
         p2ManaLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        p2ManaLabel.setForeground(Color.WHITE);
 
-        p2ManaBar = createBar(465, 118, 200, 14, Color.decode("#2196f3"));
+        p2ManaBar = createBar(465, 118, 200, 14, Color.decode("#4caf50"));
 
         // ── Centre info ───────────────────────────────────────────────────────
         roundLabel = createLabel("Fight 1", 255, 10, 200, 25);
@@ -195,6 +185,9 @@ public class BattleArcade extends ScreenBase {
     public void startBattle() {
         GameBattle battle = screen.getBattle();
 
+        loadSprites(bgGraphic);
+        bgGraphic.loopAnimation(GraphicState.IDLE);
+
         player1 = battle.getEntityOne();
         player2 = battle.getEntityTwo();
 
@@ -223,9 +216,12 @@ public class BattleArcade extends ScreenBase {
     }
 
     // ── Sprite loading ────────────────────────────────────────────────────────
+    private void loadSprites(Graphic graphic) {
+        graphic.loadRow("/sprites/battle_screen.png", BG_FRAME_WIDTH, BG_FRAME_HEIGHT, BG_FRAME_COUNT);
+    }
 
     private void loadSprites(Graphic graphic, EntityState character) {
-        String path = "/" + character.name().toLowerCase() + ".png";
+        String path = "/sprites/" + character.name().toLowerCase() + ".png";
         graphic.loadAll(path, FRAME_WIDTH, FRAME_HEIGHT, character.getFrameCount());
     }
 
@@ -282,7 +278,7 @@ public class BattleArcade extends ScreenBase {
 
         stopTurnTimer();
         attacker.reduceCooldowns();
-        attacker.takeMana(20);
+        attacker.healMana(20);
         combatLog.setText(logMessage);
         refreshBars();
 

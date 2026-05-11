@@ -13,40 +13,41 @@ public class Screen {
     private final ModeSelect modeSelect;
     private final CharacterSelect characterSelect;
     private final Battle battle;
-    private final BattleArcade battleArcade; //for arcade
+    private final BattleArcade battleArcade;
     private final Result result;
-    private final ArcadeResult arcadeResult;   //for arcade
+    private final ResultArcade resultArcade;
 
     private final GameBattle gameBattle;
 
     public Screen(GameFrame gameFrame) {
         this.gameFrame = gameFrame;
 
-        title           = new Title(this);
-        modeSelect      = new ModeSelect(this);
+        title = new Title(this);
+        modeSelect = new ModeSelect(this);
         characterSelect = new CharacterSelect(this);
-        battle          = new Battle(this);
-        battleArcade    = new BattleArcade(this);   //for arcade
-        result          = new Result(this);
-        arcadeResult    = new ArcadeResult(this);   //for arcade
+        battle = new Battle(this);
+        battleArcade = new BattleArcade(this);
+        result = new Result(this);
+        resultArcade = new ResultArcade(this);
 
         gameBattle = new GameBattle();
 
         currentScreen = title;
         gameFrame.changePanel(currentScreen);
         gameFrame.setVisible(true);
+
         Audio.startBGM("/soundtracks/Beauty_Flow.wav");
     }
 
     public void changeScreen(ScreenState gameScreen) {
         currentScreen = switch(gameScreen) {
-            case TITLE            -> title;
-            case SELECT_MODE      -> modeSelect;
+            case TITLE -> title;
+            case SELECT_MODE -> modeSelect;
             case SELECT_CHARACTER -> characterSelect;
-            case BATTLE           -> battle;
-            case BATTLE_ARCADE    -> battleArcade;
-            case RESULT           -> result;
-            case RESULT_ARCADE    -> arcadeResult;
+            case BATTLE -> battle;
+            case BATTLE_ARCADE -> battleArcade;
+            case RESULT -> result;
+            case RESULT_ARCADE -> resultArcade;
         };
 
         if(gameScreen == ScreenState.TITLE) {
@@ -57,7 +58,7 @@ public class Screen {
             battle.startBattle();
         }
 
-        if(gameScreen == ScreenState.BATTLE_ARCADE) {   //for arcade
+        if(gameScreen == ScreenState.BATTLE_ARCADE) {
             battleArcade.startBattle();
         }
 
@@ -65,18 +66,18 @@ public class Screen {
             result.showResult();
         }
 
-        if(gameScreen == ScreenState.RESULT_ARCADE) {   //for arcade
-            arcadeResult.showResult();
+        if(gameScreen == ScreenState.RESULT_ARCADE) {
+            resultArcade.showResult();
         }
 
         gameFrame.changePanel(currentScreen);
     }
 
-    public GameBattle getBattle() {
-        return gameBattle;
-    }
-
     public CharacterSelect getCharacterSelect() {
         return characterSelect;
+    }
+
+    public GameBattle getBattle() {
+        return gameBattle;
     }
 }

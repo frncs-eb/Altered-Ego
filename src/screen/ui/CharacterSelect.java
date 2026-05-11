@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
+import audio.Audio;
 import entity.EntityState;
 import screen.*;
 import util.*;
@@ -40,6 +41,11 @@ public class CharacterSelect extends ScreenBase {
         backButton.addActionListener(e -> screen.changeScreen(ScreenState.SELECT_MODE));
     }
 
+    @Override
+    protected void onAnimationTick() {
+
+    }
+
     private void onSelection(EntityState character) {
         GameBattle battle = screen.getBattle();
         ModeState mode = battle.getGameMode();
@@ -50,7 +56,6 @@ public class CharacterSelect extends ScreenBase {
             battle.setPlayerOne(character);
             characterButtons.get(character).setEnabled(false);
 
-            // TODO: Need to chane logic of setting the enemeies.
             if (isPvP) {
                 selectionRound = 2;
             } else if (isArcade) {
@@ -60,6 +65,7 @@ public class CharacterSelect extends ScreenBase {
                 }
                 java.util.Collections.shuffle(enemies);
                 battle.resetArcade(enemies);
+                Audio.startBGM("/soundtracks/Harmful_or_Fatal.wav");
                 screen.changeScreen(ScreenState.BATTLE_ARCADE);
             } else {
                 List<EntityState> available = new ArrayList<>();
@@ -68,11 +74,13 @@ public class CharacterSelect extends ScreenBase {
                 }
                 EntityState cpuPick = available.get(Util.rng(0, available.size() - 1));
                 battle.setPlayerTwo(cpuPick);
+                Audio.startBGM("/soundtracks/Harmful_or_Fatal.wav");
                 screen.changeScreen(ScreenState.BATTLE);
             }
         } else {
             // PvP round 2 selection
             battle.setPlayerTwo(character);
+            Audio.startBGM("/soundtracks/Harmful_or_Fatal.wav");
             screen.changeScreen(ScreenState.BATTLE);
         }
     }

@@ -46,6 +46,11 @@ public class Result extends ScreenBase {
         toTitleButton.addActionListener(e -> screen.changeScreen(ScreenState.TITLE));
     }
 
+    @Override
+    protected void onAnimationTick() {
+
+    }
+
     public void showResult() {
         GameBattle state = screen.getBattle();
         String winner = state.getSeriesWinner();

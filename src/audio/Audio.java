@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 public class Audio {
     private static Clip clip;
+
     public static void startBGM(String path) {
         stopBGM();
         try (InputStream is = Audio.class.getResourceAsStream(path)) {
