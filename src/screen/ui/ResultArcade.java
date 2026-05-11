@@ -1,5 +1,8 @@
 package screen.ui;
 
+import audio.Audio;
+import graphic.Graphic;
+import graphic.GraphicState;
 import screen.Screen;
 import screen.ScreenBase;
 import screen.ScreenState;
@@ -11,18 +14,20 @@ import java.awt.*;
 import java.util.List;
 
 public class ResultArcade extends ScreenBase {
+    private static final int FRAME_WIDTH = 1024;
+    private static final int FRAME_HEIGHT = 1024;
+    private static final int FRAME_COUNT = 1;
+
+    private static final int[] BG_BOUNDS = {0, 0, 706, 683};
+
+    private Graphic bgGraphic;
 
     private static final int MAX_RANKS = 10;
-    private JLabel headlineLabel;
-    private JLabel killsLabel;
-    private JLabel subLabel;
     // Leaderboard UI
-    private JLabel leaderboardTitleLabel;
     private JLabel[] rankLabels;
     // Name input for saving score
     private JTextField nameField;
     private JButton saveButton;
-    private JLabel saveLabel;
 
     private JButton mainMenuButton;
 
@@ -32,58 +37,65 @@ public class ResultArcade extends ScreenBase {
 
     @Override
     protected void initializeUI() {
+        bgGraphic = new Graphic();
+        loadSprites(bgGraphic);
+        bgGraphic.loopAnimation(GraphicState.IDLE);
+        bgGraphic.setAnimationSpeed(80);
+
         // ── Result headline ───────────────────────────────────────────────────
-        headlineLabel = createLabel("", 100, 20, 510, 55);
-        headlineLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        headlineLabel.setFont(new Font("Arial", Font.BOLD, 42));
-
-        killsLabel = createLabel("", 100, 75, 510, 30);
-        killsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        killsLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        killsLabel.setForeground(Color.DARK_GRAY);
-
-        subLabel = createLabel("", 100, 108, 510, 25);
-        subLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        subLabel.setFont(new Font("Arial", Font.ITALIC, 14));
-        subLabel.setForeground(Color.GRAY);
 
         // ── Name entry + save ─────────────────────────────────────────────────
-        saveLabel = createLabel("Enter your name:", 155, 145, 200, 25);
-        saveLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-        saveLabel.setForeground(Color.DARK_GRAY);
 
         nameField = new JTextField();
-        nameField.setBounds(155, 170, 200, 30);
+        nameField.setBounds(268, 248, 158, 25);
+        nameField.setOpaque(false);
+        nameField.setForeground(Color.WHITE);
+        //nameField.setFocusable(false);
         add(nameField);
 
-        saveButton = createButton("Save Score", 365, 168, 130, 34);
+        saveButton = createButton("", 448, 248, 75, 25);
+        saveButton.setOpaque(false);
+        saveButton.setContentAreaFilled(false);
+        //saveButton.setBorderPainted(false);
+        saveButton.setFocusable(false);
         saveButton.addActionListener(e -> saveScore());
 
         // ── Leaderboard table ─────────────────────────────────────────────────
-        leaderboardTitleLabel = createLabel("🏆  Leaderboard", 155, 215, 400, 28);
-        leaderboardTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        leaderboardTitleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        leaderboardTitleLabel.setForeground(new Color(0x5d4037));
 
         rankLabels = new JLabel[MAX_RANKS];
         for (int i = 0; i < MAX_RANKS; i++) {
-            rankLabels[i] = createLabel("", 155, 248 + i * 27, 400, 24);
+            rankLabels[i] = createLabel("", 155, 289 + i * 27, 400, 24);
             rankLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
-            rankLabels[i].setFont(new Font("Monospaced", Font.PLAIN, 13));
+            rankLabels[i].setFont(new Font("Monospaced", Font.BOLD, 16));
             rankLabels[i].setForeground(Color.DARK_GRAY);
         }
 
         // ── Main menu button ──────────────────────────────────────────────────
-        mainMenuButton = createButton("Main Menu", 255, 540, 200, 45);
+        mainMenuButton = createButton("", 290, 490, 140, 45);
+        mainMenuButton.setOpaque(false);
+        mainMenuButton.setContentAreaFilled(false);
+        mainMenuButton.setBorderPainted(false);
+        mainMenuButton.setFocusable(false);
         mainMenuButton.addActionListener(e -> {
             screen.getBattle().resetSeries();
+            Audio.startBGM("/soundtracks/Beauty_Flow.wav");
             screen.changeScreen(ScreenState.TITLE);
         });
     }
 
     @Override
     protected void onAnimationTick() {
+        bgGraphic.update();
+    }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        bgGraphic.draw(g, BG_BOUNDS[0], BG_BOUNDS[1], BG_BOUNDS[2], BG_BOUNDS[3]);
+    }
+
+    private void loadSprites(Graphic graphic) {
+        graphic.loadRow("/sprites/leaderboards_screen.png", FRAME_WIDTH, FRAME_HEIGHT, FRAME_COUNT);
     }
 
     /**
@@ -96,23 +108,11 @@ public class ResultArcade extends ScreenBase {
         int defeated = battle.getArcadeEnemiesDefeated();
         int total = battle.getTotalEnemies();
 
-        if (victory) {
-            headlineLabel.setForeground(new Color(0x2e7d32));
-            headlineLabel.setText("Victory!");
-            killsLabel.setText("All " + total + " enemies defeated!");
-            subLabel.setText("You conquered the arcade — impressive.");
-        } else {
-            headlineLabel.setForeground(new Color(0xb71c1c));
-            headlineLabel.setText("Game Over");
-            killsLabel.setText("Enemies defeated: " + defeated + " / " + total);
-            subLabel.setText("Better luck next time.");
-        }
 
         // Reset save UI
         nameField.setText("");
         nameField.setEnabled(true);
         saveButton.setEnabled(true);
-        saveLabel.setText("Enter your name:");
 
         refreshLeaderboard();
     }
@@ -120,7 +120,6 @@ public class ResultArcade extends ScreenBase {
     private void saveScore() {
         String name = nameField.getText().trim();
         if (name.isEmpty()) {
-            saveLabel.setText("Please enter a name!");
             return;
         }
         // Sanitise: strip commas so CSV stays clean
@@ -131,14 +130,12 @@ public class ResultArcade extends ScreenBase {
 
         nameField.setEnabled(false);
         saveButton.setEnabled(false);
-        saveLabel.setText("Score saved!");
         refreshLeaderboard();
     }
 
     private void refreshLeaderboard() {
         List<Leaderboard.Entry> entries = Leaderboard.load();
 
-        // Clear all rows first
         for (JLabel label : rankLabels) {
             label.setText("");
         }
@@ -152,10 +149,10 @@ public class ResultArcade extends ScreenBase {
             rankLabels[i].setText(row);
 
             // Gold / silver / bronze tint for top 3
-            if (i == 0) rankLabels[i].setForeground(new Color(0xf9a825));
-            else if (i == 1) rankLabels[i].setForeground(new Color(0x757575));
-            else if (i == 2) rankLabels[i].setForeground(new Color(0x8d6e63));
-            else rankLabels[i].setForeground(Color.DARK_GRAY);
+            if (i == 0) rankLabels[i].setForeground(Color.WHITE);
+            else if (i == 1) rankLabels[i].setForeground(Color.WHITE);
+            else if (i == 2) rankLabels[i].setForeground(Color.WHITE);
+            else rankLabels[i].setForeground(Color.WHITE);
         }
     }
 

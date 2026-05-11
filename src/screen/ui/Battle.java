@@ -109,12 +109,12 @@ public class Battle extends ScreenBase {
         roundLabel = createLabel("Round 1", 255, 10, 200, 25);
         roundLabel.setHorizontalAlignment(SwingConstants.CENTER);
         roundLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        roundLabel.setForeground(Color.DARK_GRAY);
+        roundLabel.setForeground(Color.WHITE);
 
         scoreLabel = createLabel("0 - 0", 255, 30, 200, 25);
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        scoreLabel.setForeground(Color.DARK_GRAY);
+        scoreLabel.setForeground(Color.WHITE);
 
         countdownLabel = createLabel("", 330, 50, 50, 25);
         countdownLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -124,12 +124,12 @@ public class Battle extends ScreenBase {
         turnLabel = createLabel("", 155, 160, 400, 30);
         turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
         turnLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        turnLabel.setForeground(Color.DARK_GRAY);
+        turnLabel.setForeground(Color.WHITE);
 
         combatLog = createLabel("", 55, 475, 600, 30);
         combatLog.setHorizontalAlignment(SwingConstants.CENTER);
         combatLog.setFont(new Font("Arial", Font.ITALIC, 14));
-        combatLog.setForeground(Color.DARK_GRAY);
+        combatLog.setForeground(Color.WHITE);
 
         // ── Buttons ───────────────────────────────────────────────────────────
         basicAttackButton = createButton("Basic Attack", 255, 530, 200, 50);
